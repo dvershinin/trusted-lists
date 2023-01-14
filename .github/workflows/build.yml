@@ -23,6 +23,15 @@ jobs:
 
       - name: Generate specs and commit to spec branch
         run: |
+          
+          git config user.name github-actions
+          git config user.email github-actions@github.com      
+
+          # switch to specs, create if doesn't exist
+          git checkout specs 2>/dev/null || git checkout -b specs || exit 1
+          # copies built from main to specs (mirror)
+          git checkout main build
+          
           # ensures jinja2 is accessible
           pip install jinja2-cli[yaml]
                     
@@ -33,23 +42,8 @@ jobs:
             jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
           done
           
-          git config user.name github-actions
-          git config user.email github-actions@github.com          
-          
-          
-          git add --all .
+          git add --all *.spec *.xml
           git commit -m "Up"
-          
-
-          
-          # switch to specs, create if doesn't exist
-          git checkout specs 2>/dev/null || git checkout -b specs || exit 1
-          # copies all from master to mainline (mirror)
-          git checkout main .
-          rm -rf build src trusted.yml generate.py
-          
-          git add --all .
-          git commit -m "Updated"
           # push branches
           git push --force origin specs
           
