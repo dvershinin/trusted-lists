@@ -45,6 +45,6 @@ jobs:
           git add --all *.spec *.xml
           git commit -m "Up"
           # push branches
-          git push --force origin specs
+          git push origin specs
           
           cat firewalld-ipset-braintree.spec
