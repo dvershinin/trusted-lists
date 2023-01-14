@@ -83,7 +83,7 @@ with open("trusted.yml", "r") as stream:
                     try_add_ip_or_range(item, networks)
                 print(networks)
             networks = sorted(networks, key=get_mixed_type_key)
-            with open(f"./build/{list_name}.txt", 'a') as f:
+            with open(f"./build/{list_name}.txt", 'w') as f:
                 for n in networks:
                     f.write(str(n) + "\n")
 
