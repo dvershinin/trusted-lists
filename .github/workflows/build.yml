@@ -38,6 +38,6 @@ jobs:
           git stash pop
           
           git commit -m "Up"
-          git push
+          git push --set-upstream origin specs
           
           cat firewalld-ipset-braintree.spec
