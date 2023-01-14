@@ -32,10 +32,10 @@ jobs:
           
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add .
+          git add *.spec
+          git add *.xml
           git stash
           git switch -c specs 
-          git branch --set-upstream-to=origin/specs specs
           git stash pop
           
           git commit -m "Up"
