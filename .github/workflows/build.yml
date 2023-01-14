@@ -30,3 +30,5 @@ jobs:
             name=$(basename $f .yml)
             jinja2 src/ipset.spec.j2 ${name}.yml --outfile=firewalld-ipset-${name}.spec
           done
+          
+          cat firewalld-ipset-braintree.spec
