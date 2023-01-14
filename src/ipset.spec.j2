@@ -30,7 +30,7 @@ Built-in FirewallD IP set for the Braintree payment gateway.
 
 
 %files
-%config %{_usr}/lib/firewalld/ipsets/%{ipset_name}.xml
+%{_usr}/lib/firewalld/ipsets/%{ipset_name}.xml
 
 
 %post
