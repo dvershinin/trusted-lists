@@ -9,7 +9,18 @@ Generate .txt for IP sets of:
 
 Consumable by FirewallD / fds / NGINX.
 
+## Package naming
+
+* `firewalld-ipset-<name>` for FirewallD IP sets
+* 
+
 Deliver as noarch RPM package for easy updating on CentOS/RHEL-like systems.
+
+Optimize ipsets with https://github.com/firehol/iprange/wiki
+
+Installs to /usr/share/trusted-lists/plain/<name>.txt and
+/usr/share/trusted-lists/nginx/<name>.conf
+and one major list of trusted called trusted-lists
 
 ## Future
 

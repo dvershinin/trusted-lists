@@ -1,0 +1,25 @@
+---
+
+braintree:
+  url: https://assets.braintreegateway.com/json/ips.json
+  json_selector:
+    - "production.cidrs"
+    - "production.ips"
+circleci:
+  url: https://circleci.com/docs/ip-ranges/
+  description: Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+  html_selector: "li"
+metabase:
+  url: https://www.metabase.com/cloud/docs/ip-addresses-to-whitelist
+stripe:
+  url: https://stripe.com/files/ips/ips_webhooks.txt
+paypal:
+  url: https://www.paypal.com/smarthelp/article-content?article_id=TS1056&isPCC=false&isHomePage=false
+  json_selector: "articleContent.articleContent"
+  html_selector: "li"
+cloudflare-v4:
+  url: https://www.cloudflare.com/ips-v4
+cloudflare-v6:
+  url: https://www.cloudflare.com/ips-v6
+twitter:
+  url: https://developer.twitter.com/en/docs/twitter-api/enterprise/account-activity-api/guides/securing-webhooks
