@@ -1,13 +1,31 @@
 # trusted-lists
 
 IP sets for external services typically whitelisted on a web server (payment providers, etc.)
+Consumable by FirewallD / [fds](https://fds.getpagespeed.com/) / NGINX (planned).
 
-Generate .txt for IP sets of:
+## Usage
 
-* [Stripe Webhooks](https://stripe.com/files/ips/ips_webhooks.txt) 
-* [PayPal IPN](https://www.paypal.com/mn/smarthelp/article/what-are-the-ip-addresses-for-live-paypal-servers-ts1056)
+### Trusting PayPal Webhook IP addresses
 
-Consumable by FirewallD / fds / NGINX.
+```console
+dnf -y install https://extras.getpagespeed.com/release-latest.rpm
+dnf -y install firewalld-ipset-paypal
+firewall-cmd --permanent --zone=trusted --add-source=ipset:paypal
+firewall-cmd --reload
+```
+
+You can set the respective package `firewalld-ipset-paypal` to ensure trust of updated PayPal IP addresses.
+
+## Available IP sets
+
+* `firewalld-ipset-twitter`
+* `firewalld-ipset-stripe` - [Stripe Webhooks](https://stripe.com/files/ips/ips_webhooks.txt) 
+* `firewalld-ipset-paypal` - [PayPal IPN](https://www.paypal.com/mn/smarthelp/article/what-are-the-ip-addresses-for-live-paypal-servers-ts1056)
+* `firewalld-ipset-metabase`
+* `firewalld-ipset-cloudflare-v6`
+* `firewalld-ipset-cloudflare-v4`
+* `firewalld-ipset-circleci`
+* `firewalld-ipset-braintree`
 
 ## Build
 
