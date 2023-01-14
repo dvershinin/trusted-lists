@@ -43,7 +43,7 @@ jobs:
             jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
           done
           
-          git add --all *.spec *.xml
+          git add *.spec *.xml
           git commit -m "Up"
           # push branches
           git push origin specs
