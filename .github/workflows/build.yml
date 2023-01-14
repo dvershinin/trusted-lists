@@ -21,20 +21,9 @@ jobs:
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
 
-      - name: Get changed files in the build folder
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v35.4.1
-        with:
-          files: build/*.{xml}  # Alternatively using: `docs/**` or `docs`
-
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+      - run: |
+          for changed_file in ${{ steps.files.outputs.all }}; do
+            echo "Do something with this ${changed_file}."
           done
-
-      - name: Run step if any file(s) in the docs folder change
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
-        run: |
-          echo "One or more files in the docs folder has changed."
-          echo "List all the files that have changed: ${{ steps.changed-files-specific.outputs.all_changed_files }}"
