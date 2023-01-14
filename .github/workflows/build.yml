@@ -37,7 +37,7 @@ jobs:
           git config user.email github-actions@github.com
           git add *.spec
           git add *.xml
-          git checkout specs
+          git branch specs origin/specs
           
           git commit -m "Up"
           git push --set-upstream origin specs
