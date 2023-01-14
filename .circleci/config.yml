@@ -28,7 +28,7 @@ jobs:
               mv build/${name}.xml ./
               jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
             done        
-            
+            cat *.spec
             curl "https://raw.githubusercontent.com/GetPageSpeed/buildstrap/main/generated_config.yml" -o .circleci/generated_config.yml
       - continuation/continue:
           configuration_path: .circleci/generated_config.yml # use newly generated config to continue
