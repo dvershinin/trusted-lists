@@ -1,11 +1,12 @@
 # trusted-lists
 
 IP sets for external services typically whitelisted on a web server (payment providers, etc.)
-Consumable by FirewallD / [fds](https://fds.getpagespeed.com/) / NGINX (planned).
+Consumable by FirewallD/[fds](https://fds.getpagespeed.com/)/NGINX (planned).
+Delivered as *noarch* RPM packages for easy updating on CentOS/RHEL-like systems. 
 
 ## Usage
 
-### Trusting PayPal Webhook IP addresses
+### Example. Trusting PayPal Webhook IP addresses
 
 ```console
 dnf -y install https://extras.getpagespeed.com/release-latest.rpm
@@ -14,9 +15,10 @@ firewall-cmd --permanent --zone=trusted --add-source=ipset:paypal
 firewall-cmd --reload
 ```
 
-You can set the respective package `firewalld-ipset-paypal` to ensure trust of updated PayPal IP addresses.
+You can set the respective package `firewalld-ipset-paypal` to automatically update via `dnf`
+in order to ensure trust of updated PayPal IP addresses.
 
-## Available IP sets
+## Available IP set packages
 
 * `firewalld-ipset-twitter`
 * `firewalld-ipset-stripe` - [Stripe Webhooks](https://stripe.com/files/ips/ips_webhooks.txt) 
@@ -27,26 +29,17 @@ You can set the respective package `firewalld-ipset-paypal` to ensure trust of u
 * `firewalld-ipset-circleci`
 * `firewalld-ipset-braintree`
 
-## Build
-
-```bash
-jinja2 src/ipset.spec.j2 build/braintree.yml
-```
-
 ## Package naming
 
 * `firewalld-ipset-<name>` for FirewallD IP sets
-* `nginx-whitelist-<name>` for NGINX conf file with `allow` directives?
+* (Planned) `nginx-whitelist-<name>` for NGINX conf file with `allow` directives
 
-Deliver as noarch RPM package for easy updating on CentOS/RHEL-like systems.
+## TODO
 
-Optimize ipsets with https://github.com/firehol/iprange/wiki
-
-Installs to /usr/share/trusted-lists/plain/<name>.txt and
-/usr/share/trusted-lists/nginx/<name>.conf
-and one major list of trusted called trusted-lists
+* Optimize IP sets with https://github.com/firehol/iprange/wiki
+* Install to `/usr/share/trusted-lists/plain/<name>.txt` and `/usr/share/trusted-lists/nginx/<name>.conf`
 
 ## Future
 
 This project is to be complemented by another, e.g. [server-lists](https://github.com/dvershinin/server-lists).
-The idea is that you reduce bot traffic by blocking all remote servers in server-lists project, while whitelisting the ones from trusted-lists.
+The idea is that you reduce bot traffic by blocking all remote servers in `server-lists` project, while whitelisting the ones from `trusted-lists`.
