@@ -8,9 +8,19 @@ Delivered as *noarch* RPM packages for easy updating on CentOS/RHEL-like systems
 
 ### Example. Trusting PayPal Webhook IP addresses
 
+Install the PayPal IP set:
+
 ```console
 dnf -y install https://extras.getpagespeed.com/release-latest.rpm
 dnf -y install firewalld-ipset-paypal
+```
+
+Now, FirewallD knows about the new IP set named `paypal`. 
+It will appear in the list of known IP sets provided by `firewall-cmd --get-ipsets` output.
+
+Trust it like so:
+
+```console
 firewall-cmd --permanent --zone=trusted --add-source=ipset:paypal
 firewall-cmd --reload
 ```
