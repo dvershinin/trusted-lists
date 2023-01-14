@@ -28,9 +28,10 @@ jobs:
           git config user.email github-actions@github.com      
 
           # switch to specs, create if doesn't exist
+          git fetch
           git checkout specs 2>/dev/null || git checkout -b specs || exit 1
           # copies built from main to specs (mirror)
-          git checkout main build
+          git checkout main .
           
           # ensures jinja2 is accessible
           pip install jinja2-cli[yaml]
@@ -45,6 +46,6 @@ jobs:
           git add --all *.spec *.xml
           git commit -m "Up"
           # push branches
-          git push --force origin specs
+          git push origin specs
           
           cat firewalld-ipset-braintree.spec

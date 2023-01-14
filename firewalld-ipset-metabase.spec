@@ -25,7 +25,7 @@ Built-in FirewallD IP set for the Braintree payment gateway.
 
 %install
 %{__mkdir} -p $RPM_BUILD_ROOT%{_usr}/lib/firewalld/ipsets
-%{__install} -m 644 -p %{ipset_name}.xml \
+%{__install} -m 644 -p %{SOURCE0} \
     $RPM_BUILD_ROOT%{_usr}/lib/firewalld/ipsets/%{ipset_name}.xml
 
 
