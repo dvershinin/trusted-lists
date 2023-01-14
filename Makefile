@@ -15,6 +15,8 @@ clean:
 
 .PHONY: update
 update:all
+	git pull --rebase origin main
 	git add --all .
 	git commit -m "up"
 	git push
+	git checkout specs
