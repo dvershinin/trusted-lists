@@ -22,13 +22,12 @@ jobs:
       - run: |
           # ensures jinja2 is accessible
           pip install jinja2-cli[yaml]
-          
-          mv build/*.xml ./
-          mv build/*.yml ./
-          
-          for f in *.yml; do
+                    
+          for f in build/*.yml; do
             name=$(basename $f .yml)
-            jinja2 src/ipset.spec.j2 ${name}.yml --outfile=firewalld-ipset-${name}.spec
+            VERSION=$(git log -1 --date=format:'%Y%m%d' --pretty="format:%cd" $f)
+            mv build/${name}.xml ./
+            jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
           done
           
           cat firewalld-ipset-braintree.spec

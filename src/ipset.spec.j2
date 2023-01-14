@@ -1,14 +1,14 @@
 %global ipset_name {{ name }}
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20210701
+Version:        {{ version }}
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
 URL:            {{ url }}
-Source0:
+Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
