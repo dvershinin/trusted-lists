@@ -34,16 +34,20 @@ jobs:
           done
           
           rm -rf build src trusted.yml generate.py
+          git add --all .
+          git commit -m "Up"
           
           git config user.name github-actions
           git config user.email github-actions@github.com
           
-          git add .
-
-          git fetch
-          git branch specs origin/specs
+          # switch to specs, create if doesn't exist
+          git checkout specs 2>/dev/null || git checkout -b specs || exit 1
+          # copies all from master to mainline (mirror)
+          git checkout main .
           
-          git commit -m "Up"
-          git push --set-upstream origin specs
+          git add --all .
+          git commit -m "Updated"
+          # push branches
+          git push --force origin specs
           
           cat firewalld-ipset-braintree.spec
