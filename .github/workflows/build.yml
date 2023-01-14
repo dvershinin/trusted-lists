@@ -30,6 +30,8 @@ jobs:
             jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
           done
           
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add .
           git stash
           git switch -c specs 
