@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+from xml.etree.ElementTree import Element
+
 import requests
 import yaml
 from bs4 import BeautifulSoup
 from ipaddress import IPv4Network, AddressValueError, IPv6Network, get_mixed_type_key
-
+from lxml import etree
 
 def try_add_ip_or_range(network_s, networks):
     try:
@@ -84,5 +86,20 @@ with open("trusted.yml", "r") as stream:
             with open(f"../build/{list_name}.txt", 'a') as f:
                 for n in networks:
                     f.write(str(n) + "\n")
+
+            root: Element = etree.Element('ipset')
+            root.set('type', 'hash:net')
+            description = list_name.capitalize() + " FirewallD IP Set"
+            if 'description' in list_config:
+                description = list_config['description']
+            etree.SubElement(root, 'description').text = description
+            for n in networks:
+                etree.SubElement(root, 'entry').text = str(n)
+            root.getroottree().write(
+                f'../build/{list_name}.xml',
+                xml_declaration=True,
+                encoding="utf-8",
+                pretty_print=True
+            )
     except yaml.YAMLError as exc:
         print(exc)

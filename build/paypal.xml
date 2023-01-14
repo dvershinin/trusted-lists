@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ipset type="hash:net">
+  <description>Paypal FirewallD IP Set</description>
+  <entry>64.4.240.0/21</entry>
+  <entry>64.4.248.0/22</entry>
+  <entry>66.211.168.0/22</entry>
+  <entry>91.243.72.0/23</entry>
+  <entry>173.0.80.0/20</entry>
+</ipset>

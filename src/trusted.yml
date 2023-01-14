@@ -1,13 +1,14 @@
 ---
 
 braintree:
+  description: Braintree FirewallD IP set
   url: https://assets.braintreegateway.com/json/ips.json
   json_selector:
     - "production.cidrs"
     - "production.ips"
 circleci:
-  url: https://circleci.com/docs/ip-ranges/
   description: Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+  url: https://circleci.com/docs/ip-ranges/
   html_selector: "li"
 metabase:
   url: https://www.metabase.com/cloud/docs/ip-addresses-to-whitelist
