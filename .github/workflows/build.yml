@@ -35,7 +35,7 @@ jobs:
           git add .
           git stash
           git switch -c specs 
-          git pull
+          git branch --set-upstream-to=origin/specs specs
           git stash pop
           
           git commit -m "Up"
