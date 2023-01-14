@@ -9,10 +9,16 @@ Generate .txt for IP sets of:
 
 Consumable by FirewallD / fds / NGINX.
 
+## Build
+
+```bash
+jinja2 src/ipset.spec.j2 build/braintree.yml
+```
+
 ## Package naming
 
 * `firewalld-ipset-<name>` for FirewallD IP sets
-* 
+* `nginx-whitelist-<name>` for NGINX conf file with `allow` directives?
 
 Deliver as noarch RPM package for easy updating on CentOS/RHEL-like systems.
 

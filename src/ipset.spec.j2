@@ -1,0 +1,41 @@
+%global ipset_name {{ name }}
+
+Name:           firewalld-ipset-%{ipset_name}
+Version:        20210701
+Release:        3%{?dist}
+Summary:        Braintree FirewallD IP set
+License:        BSD
+Requires:       firewalld
+BuildArch:      noarch
+URL:            {{ url }}
+Source0:
+BuildRequires:  python3
+
+
+%description
+Built-in FirewallD IP set for the Braintree payment gateway.
+
+%prep
+# nothing to do
+
+
+%build
+# https://firewalld.org/documentation/man-pages/firewalld.ipset.html
+
+
+%install
+%{__mkdir} -p $RPM_BUILD_ROOT%{_usr}/lib/firewalld/ipsets
+%{__install} -m 644 -p ipset.xml \
+    $RPM_BUILD_ROOT%{_usr}/lib/firewalld/ipsets/%{ipset_name}.xml
+
+
+%files
+%config %{_usr}/lib/firewalld/ipsets/%{ipset_name}.xml
+
+
+%post
+test -f /usr/bin/firewall-cmd && firewall-cmd --reload --quiet || :
+
+
+%changelog
+# no changelog

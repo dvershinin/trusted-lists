@@ -83,7 +83,7 @@ with open("trusted.yml", "r") as stream:
                     try_add_ip_or_range(item, networks)
                 print(networks)
             networks = sorted(networks, key=get_mixed_type_key)
-            with open(f"../build/{list_name}.txt", 'a') as f:
+            with open(f"./build/{list_name}.txt", 'a') as f:
                 for n in networks:
                     f.write(str(n) + "\n")
 
@@ -96,10 +96,18 @@ with open("trusted.yml", "r") as stream:
             for n in networks:
                 etree.SubElement(root, 'entry').text = str(n)
             root.getroottree().write(
-                f'../build/{list_name}.xml',
+                f'./build/{list_name}.xml',
                 xml_declaration=True,
                 encoding="utf-8",
                 pretty_print=True
             )
+
+            list_data = list_config.copy()
+            list_data['name'] = list_name
+            list_data['items'] = []
+            for n in networks:
+                list_data['items'].append(str(n))
+            with open(f'./build/{list_name}.yml', 'w') as f:
+                yaml.dump(list_data, f)
     except yaml.YAMLError as exc:
         print(exc)
