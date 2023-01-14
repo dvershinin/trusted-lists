@@ -32,7 +32,7 @@ jobs:
           
           git add .
           git stash
-          git checkout specs
+          git switch -c specs 
           git stash pop
           
           git commit -m "Up"
