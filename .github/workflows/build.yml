@@ -18,15 +18,18 @@ jobs:
     name: Generate spec files
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: main
 
-      - run: |
+      - name: Generate specs and commit to spec branch
+        run: |
           # ensures jinja2 is accessible
           pip install jinja2-cli[yaml]
                     
           for f in build/*.yml; do
             name=$(basename $f .yml)
             VERSION=$(git log -1 --date=format:'%Y%m%d' --pretty="format:%cd" $f)
-            mv build/${name}.xml ./
+            cp build/${name}.xml ./
             jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
           done
           
@@ -34,9 +37,8 @@ jobs:
           git config user.email github-actions@github.com
           git add *.spec
           git add *.xml
-          git stash
           git switch -c specs 
-          git stash pop
+          git pull
           
           git commit -m "Up"
           git push --set-upstream origin specs
