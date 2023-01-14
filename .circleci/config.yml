@@ -19,7 +19,8 @@ jobs:
       - run: # run a command
           name: Generate config
           command: |
-           # ensures jinja2 is accessible
+            apt -y install pip
+            # ensures jinja2 is accessible
             pip install jinja2-cli[yaml]
                       
             for f in build/*.yml; do
