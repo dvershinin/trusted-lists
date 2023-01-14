@@ -36,7 +36,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com          
           
-          rm -rf build src trusted.yml generate.py
+          
           git add --all .
           git commit -m "Up"
           
@@ -46,6 +46,7 @@ jobs:
           git checkout specs 2>/dev/null || git checkout -b specs || exit 1
           # copies all from master to mainline (mirror)
           git checkout main .
+          rm -rf build src trusted.yml generate.py
           
           git add --all .
           git commit -m "Updated"
