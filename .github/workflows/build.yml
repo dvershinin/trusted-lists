@@ -27,6 +27,6 @@ jobs:
           mv build/*.yml ./
           
           for f in *.yml; do
-            name=$(basename $f)
+            name=$(basename $f .yml)
             jinja2 src/ipset.spec.j2 ${name}.yml --outfile=firewalld-ipset-${name}.spec
           done
