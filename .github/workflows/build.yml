@@ -30,4 +30,12 @@ jobs:
             jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
           done
           
+          git add .
+          git stash
+          git checkout specs
+          git stash pop
+          
+          git commit -m "Up"
+          git push
+          
           cat firewalld-ipset-braintree.spec
