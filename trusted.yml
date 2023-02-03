@@ -22,5 +22,7 @@ cloudflare-v4:
   url: https://www.cloudflare.com/ips-v4
 cloudflare-v6:
   url: https://www.cloudflare.com/ips-v6
+jetpack:
+  url: https://jetpack.com/ips-v4.txt
 twitter:
   url: https://developer.twitter.com/en/docs/twitter-api/enterprise/account-activity-api/guides/securing-webhooks
