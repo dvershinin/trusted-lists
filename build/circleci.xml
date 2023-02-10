@@ -52,4 +52,8 @@
   <entry>162.252.209.0/24</entry>
   <entry>192.206.63.0/24</entry>
   <entry>198.206.135.0/24</entry>
+  <entry>207.254.116.0/24</entry>
+  <entry>207.254.117.0/24</entry>
+  <entry>207.254.118.0/24</entry>
+  <entry>207.254.119.0/24</entry>
 </ipset>
