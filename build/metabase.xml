@@ -1,7 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <description>Metabase FirewallD IP Set</description>
-  <entry>3.211.20.157/32</entry>
-  <entry>18.207.81.126/32</entry>
-  <entry>50.17.234.169/32</entry>
 </ipset>
