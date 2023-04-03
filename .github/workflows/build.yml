@@ -38,7 +38,7 @@ jobs:
                     
           for f in build/*.yml; do
             name=$(basename $f .yml)
-            if [[ `git status --porcelain $f` ]]; then
+            if diff "$f" "${name}.xml" >/dev/null; then
               VERSION=$(date --utc +%Y%m%d)
               cp build/${name}.xml ./
               jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
