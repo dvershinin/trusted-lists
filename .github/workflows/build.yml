@@ -41,7 +41,7 @@ jobs:
             if diff "$f" "${name}.xml" >/dev/null; then
               VERSION=$(date --utc +%Y%m%d)
               /bin/cp -f $f ./
-              jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
+              jinja2 src/ipset.spec.j2 "build/${name}.yml" -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
             fi
           done
           
