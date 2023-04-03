@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
-  <description>Braintree FirewallD IP set..</description>
+  <description>Braintree FirewallD IP set.</description>
   <entry>3.1.92.221/32</entry>
   <entry>3.9.133.153/32</entry>
   <entry>3.9.186.87/32</entry>

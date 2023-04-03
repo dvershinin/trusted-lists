@@ -36,11 +36,11 @@ jobs:
           # ensures jinja2 is accessible
           pip install jinja2-cli[yaml]
                     
-          for f in build/*.yml; do
-            name=$(basename $f .yml)
+          for f in build/*.xml; do
+            name=$(basename $f .xml)
             if diff "$f" "${name}.xml" >/dev/null; then
               VERSION=$(date --utc +%Y%m%d)
-              cp build/${name}.xml ./
+              /bin/cp -f $f ./
               jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
             fi
           done
