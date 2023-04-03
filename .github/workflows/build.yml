@@ -38,10 +38,11 @@ jobs:
                     
           for f in build/*.yml; do
             name=$(basename $f .yml)
-            VERSION=$(git log -1 --date=format:'%Y%m%d' --pretty="format:%cd" $f)
-            cp build/${name}.xml ./
-          
-            jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
+            if [[ `git status --porcelain $f` ]]; then
+              VERSION=$(date --utc +%Y%m%d)
+              cp build/${name}.xml ./
+              jinja2 src/ipset.spec.j2 ${f} -D version=${VERSION} --outfile=firewalld-ipset-${name}.spec
+            fi
           done
           
           git add *.spec *.xml
