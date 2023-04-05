@@ -1,4 +1,4 @@
-description: Braintree FirewallD IP set.
+description: Braintree FirewallD IP set
 items:
 - 3.1.92.221/32
 - 3.9.133.153/32
