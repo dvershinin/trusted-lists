@@ -1,7 +1,7 @@
 %global ipset_name stripe
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20230419
+Version:        20230515
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
