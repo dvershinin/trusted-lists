@@ -1,7 +1,7 @@
 %global ipset_name circleci
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20230623
+Version:        20230702
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
