@@ -19,8 +19,6 @@
   <entry>38.23.41.0/24</entry>
   <entry>38.23.42.0/24</entry>
   <entry>38.23.43.0/24</entry>
-  <entry>38.39.177.0/24</entry>
-  <entry>38.39.178.0/24</entry>
   <entry>38.39.183.0/24</entry>
   <entry>38.39.184.0/24</entry>
   <entry>38.39.185.0/24</entry>
@@ -47,10 +45,6 @@
   <entry>54.208.72.234/32</entry>
   <entry>54.209.115.53/32</entry>
   <entry>54.236.156.101/32</entry>
-  <entry>162.221.90.0/24</entry>
-  <entry>162.252.208.0/24</entry>
-  <entry>162.252.209.0/24</entry>
-  <entry>192.206.63.0/24</entry>
   <entry>198.206.135.0/24</entry>
   <entry>207.254.116.0/24</entry>
   <entry>207.254.117.0/24</entry>

@@ -1,7 +1,7 @@
 %global ipset_name paypal
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20230706
+Version:        20230823
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
