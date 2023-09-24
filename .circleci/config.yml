@@ -36,7 +36,7 @@ jobs:
       - checkout
       - run:
           name: "Run the build itself: this will do rpmlint and check RPMs existence among other things."
-          command: build
+          command: ./utils/version-from-tag.sh && build
       - persist_to_workspace:
           root: /output
           paths:
@@ -60,88 +60,151 @@ jobs:
           command: >
             ssh -o StrictHostKeyChecking=no
             $GPS_BUILD_USER@$GPS_BUILD_SERVER
-            "mkdir -p ~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}"
+            "mkdir -p ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO"
       - run:
           name: "Deploy all RPMs to GetPageSpeed repo."
           command: >
             scp -o StrictHostKeyChecking=no -q -r *.rpm
-            $GPS_BUILD_USER@$GPS_BUILD_SERVER:~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}/
+            $GPS_BUILD_USER@$GPS_BUILD_SERVER:~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/
       - run:
           name: "Trigger Deploy Hook."
           command: >
             ssh -o StrictHostKeyChecking=no -q
             $GPS_BUILD_USER@$GPS_BUILD_SERVER
-            "nohup ~/scripts/incoming.sh ${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}/ > ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/${CIRCLE_BRANCH}/process.log 2>&1&"
+            "nohup ~/scripts/incoming.sh $CIRCLE_PROJECT_REPONAME/$DISTRO/ > ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/process.log 2>&1&"
 workflows:
   build-deploy-amzn2:
     jobs:
-    - build: {dist: amzn2, name: build-amzn2}
+    - build:
+        dist: amzn2
+        filters:
+          tags: {only: /.*/}
+        name: build-amzn2
     - deploy:
         context: org-global
         dist: amzn2
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-amzn2
         requires: [build-amzn2]
   build-deploy-amzn2023:
     jobs:
-    - build: {dist: amzn2023, name: build-amzn2023}
+    - build:
+        dist: amzn2023
+        filters:
+          tags: {only: /.*/}
+        name: build-amzn2023
     - deploy:
         context: org-global
         dist: amzn2023
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-amzn2023
         requires: [build-amzn2023]
   build-deploy-el7:
     jobs:
-    - build: {dist: el7, name: build-el7}
+    - build:
+        dist: el7
+        filters:
+          tags: {only: /.*/}
+        name: build-el7
     - deploy:
         context: org-global
         dist: el7
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-el7
         requires: [build-el7]
   build-deploy-el8:
     jobs:
-    - build: {dist: el8, name: build-el8}
+    - build:
+        dist: el8
+        filters:
+          tags: {only: /.*/}
+        name: build-el8
     - deploy:
         context: org-global
         dist: el8
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-el8
         requires: [build-el8]
   build-deploy-el9:
     jobs:
-    - build: {dist: el9, name: build-el9}
+    - build:
+        dist: el9
+        filters:
+          tags: {only: /.*/}
+        name: build-el9
     - deploy:
         context: org-global
         dist: el9
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-el9
         requires: [build-el9]
   build-deploy-fc37:
     jobs:
-    - build: {dist: fc37, name: build-fc37}
+    - build:
+        dist: fc37
+        filters:
+          tags: {only: /.*/}
+        name: build-fc37
     - deploy:
         context: org-global
         dist: fc37
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-fc37
         requires: [build-fc37]
   build-deploy-fc38:
     jobs:
-    - build: {dist: fc38, name: build-fc38}
+    - build:
+        dist: fc38
+        filters:
+          tags: {only: /.*/}
+        name: build-fc38
     - deploy:
         context: org-global
         dist: fc38
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-fc38
         requires: [build-fc38]
   build-deploy-fc39:
     jobs:
-    - build: {dist: fc39, name: build-fc39}
+    - build:
+        dist: fc39
+        filters:
+          tags: {only: /.*/}
+        name: build-fc39
     - deploy:
         context: org-global
         dist: fc39
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-fc39
         requires: [build-fc39]
   build-deploy-sles15:
     jobs:
-    - build: {dist: sles15, name: build-sles15}
+    - build:
+        dist: sles15
+        filters:
+          tags: {only: /.*/}
+        name: build-sles15
     - deploy:
         context: org-global
         dist: sles15
+        filters:
+          branches: {ignore: /.*/}
+          tags: {only: /^v.*/}
         name: deploy-sles15
         requires: [build-sles15]
