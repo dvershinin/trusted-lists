@@ -36,7 +36,7 @@ jobs:
       - checkout
       - run:
           name: "Run the build itself: this will do rpmlint and check RPMs existence among other things."
-          command: ./utils/version-from-tag.sh && build
+          command: build
       - persist_to_workspace:
           root: /output
           paths:
@@ -60,32 +60,31 @@ jobs:
           command: >
             ssh -o StrictHostKeyChecking=no
             $GPS_BUILD_USER@$GPS_BUILD_SERVER
-            "mkdir -p ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO"
+            "mkdir -p ~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}"
       - run:
           name: "Deploy all RPMs to GetPageSpeed repo."
           command: >
             scp -o StrictHostKeyChecking=no -q -r *.rpm
-            $GPS_BUILD_USER@$GPS_BUILD_SERVER:~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/
+            $GPS_BUILD_USER@$GPS_BUILD_SERVER:~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}/
       - run:
           name: "Trigger Deploy Hook."
           command: >
             ssh -o StrictHostKeyChecking=no -q
             $GPS_BUILD_USER@$GPS_BUILD_SERVER
-            "nohup ~/scripts/incoming.sh $CIRCLE_PROJECT_REPONAME/$DISTRO/ > ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/process.log 2>&1&"
+            "nohup ~/scripts/incoming.sh ${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}/ > ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/${CIRCLE_BRANCH}/process.log 2>&1&"
 workflows:
   build-deploy-amzn2:
     jobs:
     - build:
         dist: amzn2
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-amzn2
     - deploy:
         context: org-global
         dist: amzn2
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-amzn2
         requires: [build-amzn2]
   build-deploy-amzn2023:
@@ -93,14 +92,13 @@ workflows:
     - build:
         dist: amzn2023
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-amzn2023
     - deploy:
         context: org-global
         dist: amzn2023
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-amzn2023
         requires: [build-amzn2023]
   build-deploy-el7:
@@ -108,14 +106,13 @@ workflows:
     - build:
         dist: el7
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-el7
     - deploy:
         context: org-global
         dist: el7
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-el7
         requires: [build-el7]
   build-deploy-el8:
@@ -123,14 +120,13 @@ workflows:
     - build:
         dist: el8
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-el8
     - deploy:
         context: org-global
         dist: el8
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-el8
         requires: [build-el8]
   build-deploy-el9:
@@ -138,14 +134,13 @@ workflows:
     - build:
         dist: el9
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-el9
     - deploy:
         context: org-global
         dist: el9
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-el9
         requires: [build-el9]
   build-deploy-fc37:
@@ -153,14 +148,13 @@ workflows:
     - build:
         dist: fc37
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-fc37
     - deploy:
         context: org-global
         dist: fc37
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-fc37
         requires: [build-fc37]
   build-deploy-fc38:
@@ -168,14 +162,13 @@ workflows:
     - build:
         dist: fc38
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-fc38
     - deploy:
         context: org-global
         dist: fc38
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-fc38
         requires: [build-fc38]
   build-deploy-fc39:
@@ -183,14 +176,13 @@ workflows:
     - build:
         dist: fc39
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-fc39
     - deploy:
         context: org-global
         dist: fc39
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-fc39
         requires: [build-fc39]
   build-deploy-sles15:
@@ -198,13 +190,12 @@ workflows:
     - build:
         dist: sles15
         filters:
-          tags: {only: /.*/}
+          branches: {only: specs}
         name: build-sles15
     - deploy:
         context: org-global
         dist: sles15
         filters:
-          branches: {ignore: /.*/}
-          tags: {only: /^v.*/}
+          branches: {only: specs}
         name: deploy-sles15
         requires: [build-sles15]
