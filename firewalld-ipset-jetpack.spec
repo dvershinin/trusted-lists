@@ -1,7 +1,7 @@
 %global ipset_name jetpack
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20240424
+Version:        20240521
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
