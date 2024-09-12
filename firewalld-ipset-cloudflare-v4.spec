@@ -1,7 +1,7 @@
 %global ipset_name cloudflare-v4
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20240909
+Version:        20240912
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
