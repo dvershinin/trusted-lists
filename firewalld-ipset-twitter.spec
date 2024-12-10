@@ -1,7 +1,7 @@
 %global ipset_name twitter
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20241209
+Version:        20241210
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
