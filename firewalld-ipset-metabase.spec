@@ -1,7 +1,7 @@
 %global ipset_name metabase
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20241210
+Version:        20241211
 Release:        3%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
