@@ -1,5 +1,4 @@
 /venv/
 output/
-*.xml
-*.spec
-# Keep build/ tracked for version persistence via YAMLs
+# Keep build/ tracked for diff-based workflow
+state/
