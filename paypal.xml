@@ -6,4 +6,7 @@
   <entry>66.211.168.0/22</entry>
   <entry>91.243.72.0/23</entry>
   <entry>173.0.80.0/20</entry>
+  <entry>185.177.52.0/22</entry>
+  <entry>192.160.215.0/24</entry>
+  <entry>198.54.216.0/23</entry>
 </ipset>

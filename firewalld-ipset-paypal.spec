@@ -1,9 +1,9 @@
 %global ipset_name paypal
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20230823
-Release:        3%{?dist}
-Summary:        Braintree FirewallD IP set
+Version:        20250809
+Release:        1%{?dist}
+Summary:        paypal FirewallD IP set
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
@@ -13,7 +13,7 @@ BuildRequires:  python3
 
 
 %description
-Built-in FirewallD IP set for the Braintree payment gateway.
+paypal FirewallD IP set
 
 %prep
 # nothing to do

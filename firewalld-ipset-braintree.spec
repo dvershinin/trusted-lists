@@ -1,8 +1,8 @@
 %global ipset_name braintree
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20230516
-Release:        3%{?dist}
+Version:        20250809
+Release:        1%{?dist}
 Summary:        Braintree FirewallD IP set
 License:        BSD
 Requires:       firewalld
@@ -13,7 +13,7 @@ BuildRequires:  python3
 
 
 %description
-Built-in FirewallD IP set for the Braintree payment gateway.
+Braintree FirewallD IP set
 
 %prep
 # nothing to do

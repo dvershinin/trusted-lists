@@ -1,19 +1,22 @@
-%global ipset_name {{ name }}
+%global ipset_name openai-chatgpt-user
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        {{ version }}
+Version:        20250809
 Release:        1%{?dist}
-Summary:        {{ summary | default(description) | default(name ~ ' FirewallD IP set') }}
+Summary:        OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            {{ url }}
+URL:            https://openai.com/chatgpt-user.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-{{ long_description | default(description) | default(summary) | default(name ~ ' FirewallD IP set') }}
+Outbound IP ranges used by ChatGPT for user-triggered operations, including ChatGPT Agents (tool calls and HTTP callbacks),
+Actions, and third-party integrations. Use this list to allowlist inbound webhooks or callback endpoints that ChatGPT may call.
+Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
+
 
 %prep
 # nothing to do

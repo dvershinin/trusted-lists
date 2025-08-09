@@ -1,9 +1,9 @@
 %global ipset_name circleci
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20230706
-Release:        3%{?dist}
-Summary:        Braintree FirewallD IP set
+Version:        20250809
+Release:        1%{?dist}
+Summary:        Well-defined IP address ranges. Supported only on paid plans of CircleCI.
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
@@ -13,7 +13,7 @@ BuildRequires:  python3
 
 
 %description
-Built-in FirewallD IP set for the Braintree payment gateway.
+Well-defined IP address ranges. Supported only on paid plans of CircleCI.
 
 %prep
 # nothing to do

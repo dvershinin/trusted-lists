@@ -1,19 +1,21 @@
-%global ipset_name {{ name }}
+%global ipset_name openai-gptbot
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        {{ version }}
+Version:        20250809
 Release:        1%{?dist}
-Summary:        {{ summary | default(description) | default(name ~ ' FirewallD IP set') }}
+Summary:        OpenAI GPTBot FirewallD IP set
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            {{ url }}
+URL:            https://openai.com/gptbot.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-{{ long_description | default(description) | default(summary) | default(name ~ ' FirewallD IP set') }}
+Outbound IP ranges used by OpenAI's GPTBot crawler. This bot fetches pages for training/evaluation per site opt-in.
+Source: openai.com/gptbot.json (JSON: prefixes[].ipv4Prefix)
+
 
 %prep
 # nothing to do
