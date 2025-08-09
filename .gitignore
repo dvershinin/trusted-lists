@@ -2,3 +2,4 @@
 output/
 # Keep build/ tracked for diff-based workflow
 state/
+sources-openai/
