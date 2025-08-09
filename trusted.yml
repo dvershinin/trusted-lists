@@ -26,3 +26,32 @@ jetpack:
   url: https://jetpack.com/ips-v4.txt
 twitter:
   url: https://developer.twitter.com/en/docs/twitter-api/enterprise/account-activity-api/guides/securing-webhooks
+
+openai-gptbot:
+  summary: OpenAI GPTBot FirewallD IP set
+  description: |
+    Outbound IP ranges used by OpenAI's GPTBot crawler. This bot fetches pages for training/evaluation per site opt-in.
+    Source: openai.com/gptbot.json (JSON: prefixes[].ipv4Prefix)
+  url: https://openai.com/gptbot.json
+  json_selector: prefixes
+  # Optionally specify which keys inside objects contain CIDRs
+  json_value_keys: ipv4Prefix
+
+openai-chatgpt-user:
+  summary: OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
+  description: |
+    Outbound IP ranges used by ChatGPT for user-triggered operations, including ChatGPT Agents (tool calls and HTTP callbacks),
+    Actions, and third-party integrations. Use this list to allowlist inbound webhooks or callback endpoints that ChatGPT may call.
+    Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
+  url: https://openai.com/chatgpt-user.json
+  json_selector: prefixes
+  json_value_keys: ipv4Prefix
+
+openai-searchbot:
+  summary: OpenAI SearchBot FirewallD IP set
+  description: |
+    Outbound IP ranges used by OpenAI SearchBot, which retrieves content for search-index related features.
+    Source: openai.com/searchbot.json (JSON: prefixes[].ipv4Prefix)
+  url: https://openai.com/searchbot.json
+  json_selector: prefixes
+  json_value_keys: ipv4Prefix

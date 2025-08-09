@@ -1,1 +1,5 @@
 /venv/
+output/
+*.xml
+*.spec
+# Keep build/ tracked for version persistence via YAMLs

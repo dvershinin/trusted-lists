@@ -2,8 +2,8 @@
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        {{ version }}
-Release:        3%{?dist}
-Summary:        Braintree FirewallD IP set
+Release:        1%{?dist}
+Summary:        {{ summary | default(description) | default(name ~ ' FirewallD IP set') }}
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
@@ -13,7 +13,7 @@ BuildRequires:  python3
 
 
 %description
-Built-in FirewallD IP set for the Braintree payment gateway.
+{{ long_description | default(description) | default(summary) | default(name ~ ' FirewallD IP set') }}
 
 %prep
 # nothing to do

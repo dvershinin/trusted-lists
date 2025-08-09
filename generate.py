@@ -6,24 +6,37 @@ import yaml
 from bs4 import BeautifulSoup
 from ipaddress import IPv4Network, AddressValueError, IPv6Network, get_mixed_type_key
 from lxml import etree
+from datetime import datetime
+import os
+import re
+from jinja2 import Environment, FileSystemLoader
+from email.utils import parsedate_to_datetime
 
 def try_add_ip_or_range(network_s, networks):
     try:
         networks.append(
-            IPv4Network(item)
+            IPv4Network(network_s)
         )
     except AddressValueError:
         try:
             networks.append(
-                IPv6Network(item)
+                IPv6Network(network_s)
             )
         except AddressValueError:
             pass
 
 
-with open("trusted.yml", "r") as stream:
+script_dir = os.path.abspath(os.path.dirname(__file__))
+build_dir = os.path.join(script_dir, "build")
+os.makedirs(build_dir, exist_ok=True)
+
+env = Environment(loader=FileSystemLoader(os.path.join(script_dir, "src")))
+ipset_spec_tpl = env.get_template("ipset.spec.j2")
+
+with open(os.path.join(script_dir, "trusted.yml"), "r") as stream:
     try:
         trusted_lists = yaml.safe_load(stream)
+
         for list_name, list_config in trusted_lists.items():
             print(list_name)
             print(list_config)
@@ -37,6 +50,8 @@ with open("trusted.yml", "r") as stream:
                 }
             )
             content_type = list_content_r.headers['content-type'].split(';').pop(0).strip()
+            # Default version base: try upstream creationTime or Last-Modified; fallback to today's date (as string)
+            base_version_value = datetime.utcnow().strftime('%Y%m%d')
             if content_type == 'text/plain':
                 list_items = list_content_r.text.splitlines()
                 print(list_items)
@@ -44,8 +59,16 @@ with open("trusted.yml", "r") as stream:
                     try_add_ip_or_range(item, networks)
                 print(networks)
             elif content_type == 'application/json':
-
                 data = list_content_r.json()
+                # If upstream provides creationTime, prefer it for version base
+                if isinstance(data, dict) and 'creationTime' in data:
+                    try:
+                        # Extract YYYY-MM-DD and convert to YYYYMMDD for Py3.6 compat
+                        m = re.match(r"(\d{4})-(\d{2})-(\d{2})", str(data['creationTime']))
+                        if m:
+                            base_version_value = f"{m.group(1)}{m.group(2)}{m.group(3)}"
+                    except Exception:
+                        pass
                 json_selectors = []
                 if 'json_selector' in list_config:
                     if not isinstance(list_config['json_selector'], list):
@@ -66,8 +89,37 @@ with open("trusted.yml", "r") as stream:
                             try_add_ip_or_range(item, networks)
                         print(list_items)
                     else:
+                        # target_element can be a list of strings or dicts
                         for item in target_element:
-                            try_add_ip_or_range(item, networks)
+                            if isinstance(item, dict):
+                                # If configured, use specific value keys from YAML
+                                value_keys = []
+                                if 'json_value_keys' in list_config:
+                                    if isinstance(list_config['json_value_keys'], list):
+                                        value_keys = list_config['json_value_keys']
+                                    else:
+                                        value_keys = [list_config['json_value_keys']]
+                                if value_keys:
+                                    for k in value_keys:
+                                        if k in item:
+                                            v = item[k]
+                                            if isinstance(v, list):
+                                                for vv in v:
+                                                    if isinstance(vv, str):
+                                                        try_add_ip_or_range(vv, networks)
+                                            elif isinstance(v, str):
+                                                try_add_ip_or_range(v, networks)
+                                else:
+                                    # Auto-detect: try all string values
+                                    for v in item.values():
+                                        if isinstance(v, list):
+                                            for vv in v:
+                                                if isinstance(vv, str):
+                                                    try_add_ip_or_range(vv, networks)
+                                        elif isinstance(v, str):
+                                            try_add_ip_or_range(v, networks)
+                            else:
+                                try_add_ip_or_range(item, networks)
                 print(networks)
             elif content_type == 'text/html':
                 soup = BeautifulSoup(list_content_r.text, 'html.parser')
@@ -83,7 +135,20 @@ with open("trusted.yml", "r") as stream:
                     try_add_ip_or_range(item, networks)
                 print(networks)
             networks = sorted(networks, key=get_mixed_type_key)
-            with open(f"./build/{list_name}.txt", 'w') as f:
+
+            # Try Last-Modified header as a version base if no creationTime-derived date
+            if base_version_value == datetime.utcnow().strftime('%Y%m%d'):
+                try:
+                    last_mod = list_content_r.headers.get('last-modified') or list_content_r.headers.get('Last-Modified')
+                    if last_mod:
+                        dt = parsedate_to_datetime(last_mod)
+                        base_version_value = dt.strftime('%Y%m%d')
+                except Exception:
+                    pass
+
+            # Version derived purely from upstream timestamps
+            version_value = base_version_value
+            with open(os.path.join(build_dir, f"{list_name}.txt"), 'w') as f:
                 for n in networks:
                     f.write(str(n) + "\n")
 
@@ -96,7 +161,7 @@ with open("trusted.yml", "r") as stream:
             for n in networks:
                 etree.SubElement(root, 'entry').text = str(n)
             root.getroottree().write(
-                f'./build/{list_name}.xml',
+                os.path.join(build_dir, f'{list_name}.xml'),
                 xml_declaration=True,
                 encoding="utf-8",
                 pretty_print=True
@@ -107,7 +172,23 @@ with open("trusted.yml", "r") as stream:
             list_data['items'] = []
             for n in networks:
                 list_data['items'].append(str(n))
-            with open(f'./build/{list_name}.yml', 'w') as f:
+            with open(os.path.join(build_dir, f'{list_name}.yml'), 'w') as f:
                 yaml.dump(list_data, f)
+
+            # Render RPM spec for this list (support summary vs long description)
+            summary_value = list_data.get('summary', list_data.get('description', f"{list_name.capitalize()} FirewallD IP set"))
+            long_desc_value = list_data.get('description', summary_value)
+            spec_content = ipset_spec_tpl.render(
+                name=list_name,
+                version=version_value,
+                url=list_data.get('url', ''),
+                summary=summary_value,
+                long_description=long_desc_value,
+            )
+            spec_path = os.path.join(build_dir, f"{list_name}.spec")
+            with open(spec_path, 'w') as f:
+                f.write(spec_content)
+
+        # no persistent state; versions are derived from upstream timestamps
     except yaml.YAMLError as exc:
         print(exc)

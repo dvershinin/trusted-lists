@@ -10,8 +10,13 @@ setup:
 
 .PHONY: clean
 clean:
-	find docs/modules -type f -exec rm -f {} +
+	rm -rf build/*
+	rm -rf output/*
 	rm -rf docs/modules.md
+
+# keep rpm target out to restore original Makefile
+
+# drop update-specs to restore original Makefile
 
 .PHONY: update
 update:all

@@ -2,7 +2,7 @@
 
 IP sets for external services typically whitelisted on a web server (payment providers, etc.)
 Consumable by FirewallD/[fds](https://fds.getpagespeed.com/)/NGINX (planned).
-Delivered as *noarch* RPM packages for easy updating on CentOS/RHEL-like systems. 
+Delivered as *noarch* RPM packages for easy updating on CentOS/RHEL-like systems.
 
 ## Usage
 
@@ -43,6 +43,54 @@ in order to ensure trust of updated PayPal IP addresses.
 
 * `firewalld-ipset-<name>` for FirewallD IP sets
 * (Planned) `nginx-whitelist-<name>` for NGINX conf file with `allow` directives
+
+## Generate and build
+
+This repo provides a generator that fetches upstream IP ranges and produces:
+
+- plain lists in `build/<name>.txt`
+- FirewallD ipset XML in `build/<name>.xml`
+- packaging metadata in `build/<name>.yml` (extracted `items` only)
+- RPM spec in `build/<name>.spec`
+
+Local workflow:
+
+```bash
+make setup
+make            # runs the generator, writes to build/
+```
+
+CI/CD workflow (GitHub Actions + specs branch + CircleCI):
+
+- GitHub Actions (in `.github/workflows/build.yml`) runs on `main`, generates from `build/`, and commits only changed `*.spec`/`*.xml` into the `specs` branch.
+- CircleCI pipeline is configured to build from the `specs` branch only. If nothing changed in `build/` (hence no change committed by Actions), CircleCI won’t rebuild.
+- To force a run locally, ensure `build/` contains updated outputs and push to `main`.
+
+Versioning
+
+- RPM `Version` is derived from upstream timestamps (JSON `creationTime` or HTTP `Last-Modified`) with fallback to today.
+- The build workflow compares generated files via git diff; if nothing changed, CI won’t publish rebuilt artifacts.
+
+Selectors
+
+- `json_selector`: a dot path (or list of paths) to an array in JSON. Each array element can be:
+  - a CIDR string (e.g., "1.2.3.0/24")
+  - an object; use `json_value_keys` (string or list) to list field names that contain CIDRs. If not provided, all string values in the object (and strings within lists) are tried.
+- `html_selector`: optional CSS selector to extract items from HTML; otherwise all lines of text are scanned.
+```
+
+Notes:
+- `build/` is tracked in VCS to allow CI diffing; RPMs in `output/` are ignored.
+- Specs are emitted into `build/` and consumed by rpmbuilder.
+- The generator is compatible with Python 3.6+.
+
+### Sources and selectors
+
+- Each list in `trusted.yml` supports:
+  - `url`: upstream endpoint
+  - `json_selector`: dot-notated path (or list of paths) to extract array data from JSON
+  - `json_value_keys`: string or list of keys whose values contain CIDRs (optional). If omitted, auto-detect from all string values.
+  - `html_selector`: CSS selector to extract items from HTML (falls back to splitting lines of page text)
 
 ## TODO
 

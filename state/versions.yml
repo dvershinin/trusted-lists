@@ -1,0 +1,36 @@
+braintree:
+  hash: 3ed97b14
+  version: '20250809'
+circleci:
+  hash: e3b0c442
+  version: '20250809'
+cloudflare-v4:
+  hash: 06394306
+  version: '20250809'
+cloudflare-v6:
+  hash: 17d377d6
+  version: '20250809'
+jetpack:
+  hash: 2c1a7845
+  version: '20250809'
+metabase:
+  hash: e3b0c442
+  version: '20250809'
+openai-chatgpt-user:
+  hash: ac5ab0ea
+  version: '20250806'
+openai-gptbot:
+  hash: 5703d4d2
+  version: '20250522'
+openai-searchbot:
+  hash: 2588e6ef
+  version: '20250611'
+paypal:
+  hash: 2535fa07
+  version: '20250809'
+stripe:
+  hash: df554237
+  version: '20250809'
+twitter:
+  hash: aeb37240
+  version: '20250809'
