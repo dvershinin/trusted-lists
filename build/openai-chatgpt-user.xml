@@ -19,6 +19,7 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>13.76.116.80/28</entry>
   <entry>13.83.167.128/28</entry>
   <entry>13.83.237.176/28</entry>
+  <entry>20.0.53.96/28</entry>
   <entry>20.55.229.144/28</entry>
   <entry>20.63.221.64/28</entry>
   <entry>20.77.178.240/28</entry>
@@ -56,6 +57,8 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>52.156.77.144/28</entry>
   <entry>52.159.227.32/28</entry>
   <entry>52.159.249.96/28</entry>
+  <entry>52.173.219.96/28</entry>
+  <entry>52.173.219.112/28</entry>
   <entry>52.173.234.16/28</entry>
   <entry>52.173.234.80/28</entry>
   <entry>52.176.139.176/28</entry>
