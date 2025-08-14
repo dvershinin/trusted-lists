@@ -1,7 +1,7 @@
 %global ipset_name circleci
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20250811
+Version:        20250813
 Release:        1%{?dist}
 Summary:        Well-defined IP address ranges. Supported only on paid plans of CircleCI.
 License:        BSD
