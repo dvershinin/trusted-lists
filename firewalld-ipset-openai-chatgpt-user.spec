@@ -1,7 +1,7 @@
 %global ipset_name openai-chatgpt-user
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20250813
+Version:        20250815
 Release:        1%{?dist}
 Summary:        OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
 License:        BSD

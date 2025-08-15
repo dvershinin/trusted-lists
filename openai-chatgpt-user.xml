@@ -129,5 +129,9 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>172.213.21.144/28</entry>
   <entry>191.233.194.32/28</entry>
   <entry>191.233.196.112/28</entry>
+  <entry>191.234.167.128/28</entry>
   <entry>191.235.66.16/28</entry>
+  <entry>191.235.98.144/28</entry>
+  <entry>191.235.99.80/28</entry>
+  <entry>191.239.245.16/28</entry>
 </ipset>
