@@ -58,7 +58,7 @@ jobs:
       - persist_to_workspace:
           root: /output
           paths:
-            - "*.rpm"
+            - "."
   deploy:
     parameters:
       dist:
