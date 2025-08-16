@@ -22,6 +22,6 @@ clean:
 update:all
 	git pull --rebase origin main
 	git add --all .
-	git commit -m "up"
+	git commit -m "up" || echo "No changes to commit"
 	git push
 	git checkout specs
