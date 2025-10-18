@@ -5,11 +5,14 @@ executors:
     parameters:
       dist:
         type: string
+      arch:
+        type: string
     docker:
       - image: kroniak/ssh-client
     working_directory: /output
     environment:
       DISTRO: << parameters.dist >>
+      ARCH: << parameters.arch >>
   rpmbuilder:
     parameters:
       dist:
@@ -28,7 +31,11 @@ jobs:
       dist:
         description: "The dist tag of OS to build for"
         type: string
-    resource_class: small
+      resource_class:
+        description: "The resource class to use for the build"
+        type: string
+        default: "small"
+    resource_class: << parameters.resource_class >>
     executor:
       name: rpmbuilder
       dist: << parameters.dist >>
@@ -37,6 +44,17 @@ jobs:
       - run:
           name: "Run the build itself: this will do rpmlint and check RPMs existence among other things."
           command: build
+      - run:
+          name: "Check for RPM files and halt if none exist"
+          command: |
+            set -x
+            if ls /output/*.rpm 1> /dev/null 2>&1; then
+              echo "RPM files found. Proceeding with persistence to workspace."
+            else
+              echo "No RPM files found. Halting the job."
+              curl --request POST --url https://circleci.com/api/v2/workflow/$CIRCLE_WORKFLOW_ID/cancel --header "Circle-Token: ${CIRCLE_TOKEN}"
+              circleci-agent step halt
+            fi
       - persist_to_workspace:
           root: /output
           paths:
@@ -46,9 +64,13 @@ jobs:
       dist:
         description: "The dist tag of OS to deploy for"
         type: string
+      arch:
+        description: "The architecture to deploy for"
+        type: string
     executor:
       name: deploy
       dist: << parameters.dist >>
+      arch: << parameters.arch >>
     steps:
       - attach_workspace:
           at: /output
@@ -60,88 +82,315 @@ jobs:
           command: >
             ssh -o StrictHostKeyChecking=no
             $GPS_BUILD_USER@$GPS_BUILD_SERVER
-            "mkdir -p ~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}"
+            "mkdir -p ~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${ARCH}/${CIRCLE_BRANCH}"
       - run:
           name: "Deploy all RPMs to GetPageSpeed repo."
-          command: >
-            scp -o StrictHostKeyChecking=no -q -r *.rpm
-            $GPS_BUILD_USER@$GPS_BUILD_SERVER:~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}/
+          command: |
+            echo "Uploading RPMs..."
+            ls -al
+            echo "Target upload directory: ~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${ARCH}/${CIRCLE_BRANCH}/"
+            scp -o StrictHostKeyChecking=no -q -r *.rpm $GPS_BUILD_USER@$GPS_BUILD_SERVER:~/incoming/${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${ARCH}/${CIRCLE_BRANCH}/
       - run:
           name: "Trigger Deploy Hook."
           command: >
             ssh -o StrictHostKeyChecking=no -q
             $GPS_BUILD_USER@$GPS_BUILD_SERVER
-            "nohup ~/scripts/incoming.sh ${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${CIRCLE_BRANCH}/ > ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/${CIRCLE_BRANCH}/process.log 2>&1&"
+            "nohup ~/scripts/incoming.sh ${CIRCLE_PROJECT_REPONAME}/${DISTRO}/${ARCH}/${CIRCLE_BRANCH}/ > ~/incoming/$CIRCLE_PROJECT_REPONAME/$DISTRO/${ARCH}/${CIRCLE_BRANCH}/process.log 2>&1&"
 workflows:
-  build-deploy-amzn2:
+  build-deploy-amzn2-aarch64:
     jobs:
-    - build: {dist: amzn2, name: build-amzn2}
-    - deploy:
+    - build:
         context: org-global
         dist: amzn2
-        name: deploy-amzn2
-        requires: [build-amzn2]
-  build-deploy-amzn2023:
-    jobs:
-    - build: {dist: amzn2023, name: build-amzn2023}
+        filters:
+          branches: {only: specs}
+        name: build-amzn2-aarch64
+        resource_class: arm.medium
     - deploy:
+        arch: aarch64
+        context: org-global
+        dist: amzn2
+        filters:
+          branches: {only: specs}
+        name: deploy-amzn2-aarch64
+        requires: [build-amzn2-aarch64]
+  build-deploy-amzn2-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: amzn2
+        filters:
+          branches: {only: specs}
+        name: build-amzn2-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: amzn2
+        filters:
+          branches: {only: specs}
+        name: deploy-amzn2-x86_64
+        requires: [build-amzn2-x86_64]
+  build-deploy-amzn2023-aarch64:
+    jobs:
+    - build:
         context: org-global
         dist: amzn2023
-        name: deploy-amzn2023
-        requires: [build-amzn2023]
-  build-deploy-el7:
-    jobs:
-    - build: {dist: el7, name: build-el7}
+        filters:
+          branches: {only: specs}
+        name: build-amzn2023-aarch64
+        resource_class: arm.medium
     - deploy:
+        arch: aarch64
+        context: org-global
+        dist: amzn2023
+        filters:
+          branches: {only: specs}
+        name: deploy-amzn2023-aarch64
+        requires: [build-amzn2023-aarch64]
+  build-deploy-amzn2023-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: amzn2023
+        filters:
+          branches: {only: specs}
+        name: build-amzn2023-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: amzn2023
+        filters:
+          branches: {only: specs}
+        name: deploy-amzn2023-x86_64
+        requires: [build-amzn2023-x86_64]
+  build-deploy-el10-aarch64:
+    jobs:
+    - build:
+        context: org-global
+        dist: el10
+        filters:
+          branches: {only: specs}
+        name: build-el10-aarch64
+        resource_class: arm.medium
+    - deploy:
+        arch: aarch64
+        context: org-global
+        dist: el10
+        filters:
+          branches: {only: specs}
+        name: deploy-el10-aarch64
+        requires: [build-el10-aarch64]
+  build-deploy-el10-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: el10
+        filters:
+          branches: {only: specs}
+        name: build-el10-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: el10
+        filters:
+          branches: {only: specs}
+        name: deploy-el10-x86_64
+        requires: [build-el10-x86_64]
+  build-deploy-el7-aarch64:
+    jobs:
+    - build:
         context: org-global
         dist: el7
-        name: deploy-el7
-        requires: [build-el7]
-  build-deploy-el8:
-    jobs:
-    - build: {dist: el8, name: build-el8}
+        filters:
+          branches: {only: specs}
+        name: build-el7-aarch64
+        resource_class: arm.medium
     - deploy:
+        arch: aarch64
+        context: org-global
+        dist: el7
+        filters:
+          branches: {only: specs}
+        name: deploy-el7-aarch64
+        requires: [build-el7-aarch64]
+  build-deploy-el7-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: el7
+        filters:
+          branches: {only: specs}
+        name: build-el7-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: el7
+        filters:
+          branches: {only: specs}
+        name: deploy-el7-x86_64
+        requires: [build-el7-x86_64]
+  build-deploy-el8-aarch64:
+    jobs:
+    - build:
         context: org-global
         dist: el8
-        name: deploy-el8
-        requires: [build-el8]
-  build-deploy-el9:
-    jobs:
-    - build: {dist: el9, name: build-el9}
+        filters:
+          branches: {only: specs}
+        name: build-el8-aarch64
+        resource_class: arm.medium
     - deploy:
+        arch: aarch64
+        context: org-global
+        dist: el8
+        filters:
+          branches: {only: specs}
+        name: deploy-el8-aarch64
+        requires: [build-el8-aarch64]
+  build-deploy-el8-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: el8
+        filters:
+          branches: {only: specs}
+        name: build-el8-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: el8
+        filters:
+          branches: {only: specs}
+        name: deploy-el8-x86_64
+        requires: [build-el8-x86_64]
+  build-deploy-el9-aarch64:
+    jobs:
+    - build:
         context: org-global
         dist: el9
-        name: deploy-el9
-        requires: [build-el9]
-  build-deploy-fc36:
-    jobs:
-    - build: {dist: fc36, name: build-fc36}
+        filters:
+          branches: {only: specs}
+        name: build-el9-aarch64
+        resource_class: arm.medium
     - deploy:
+        arch: aarch64
         context: org-global
-        dist: fc36
-        name: deploy-fc36
-        requires: [build-fc36]
-  build-deploy-fc37:
+        dist: el9
+        filters:
+          branches: {only: specs}
+        name: deploy-el9-aarch64
+        requires: [build-el9-aarch64]
+  build-deploy-el9-x86_64:
     jobs:
-    - build: {dist: fc37, name: build-fc37}
-    - deploy:
+    - build:
         context: org-global
-        dist: fc37
-        name: deploy-fc37
-        requires: [build-fc37]
-  build-deploy-fc38:
-    jobs:
-    - build: {dist: fc38, name: build-fc38}
+        dist: el9
+        filters:
+          branches: {only: specs}
+        name: build-el9-x86_64
     - deploy:
+        arch: x86_64
         context: org-global
-        dist: fc38
-        name: deploy-fc38
-        requires: [build-fc38]
-  build-deploy-sles15:
+        dist: el9
+        filters:
+          branches: {only: specs}
+        name: deploy-el9-x86_64
+        requires: [build-el9-x86_64]
+  build-deploy-fc41-aarch64:
     jobs:
-    - build: {dist: sles15, name: build-sles15}
+    - build:
+        context: org-global
+        dist: fc41
+        filters:
+          branches: {only: specs}
+        name: build-fc41-aarch64
+        resource_class: arm.medium
     - deploy:
+        arch: aarch64
+        context: org-global
+        dist: fc41
+        filters:
+          branches: {only: specs}
+        name: deploy-fc41-aarch64
+        requires: [build-fc41-aarch64]
+  build-deploy-fc41-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: fc41
+        filters:
+          branches: {only: specs}
+        name: build-fc41-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: fc41
+        filters:
+          branches: {only: specs}
+        name: deploy-fc41-x86_64
+        requires: [build-fc41-x86_64]
+  build-deploy-fc42-aarch64:
+    jobs:
+    - build:
+        context: org-global
+        dist: fc42
+        filters:
+          branches: {only: specs}
+        name: build-fc42-aarch64
+        resource_class: arm.medium
+    - deploy:
+        arch: aarch64
+        context: org-global
+        dist: fc42
+        filters:
+          branches: {only: specs}
+        name: deploy-fc42-aarch64
+        requires: [build-fc42-aarch64]
+  build-deploy-fc42-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: fc42
+        filters:
+          branches: {only: specs}
+        name: build-fc42-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: fc42
+        filters:
+          branches: {only: specs}
+        name: deploy-fc42-x86_64
+        requires: [build-fc42-x86_64]
+  build-deploy-sles15-aarch64:
+    jobs:
+    - build:
         context: org-global
         dist: sles15
-        name: deploy-sles15
-        requires: [build-sles15]
+        filters:
+          branches: {only: specs}
+        name: build-sles15-aarch64
+        resource_class: arm.medium
+    - deploy:
+        arch: aarch64
+        context: org-global
+        dist: sles15
+        filters:
+          branches: {only: specs}
+        name: deploy-sles15-aarch64
+        requires: [build-sles15-aarch64]
+  build-deploy-sles15-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: sles15
+        filters:
+          branches: {only: specs}
+        name: build-sles15-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: sles15
+        filters:
+          branches: {only: specs}
+        name: deploy-sles15-x86_64
+        requires: [build-sles15-x86_64]
