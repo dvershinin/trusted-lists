@@ -60,11 +60,13 @@ make setup
 make            # runs the generator, writes to build/
 ```
 
-CI/CD workflow (GitHub Actions + specs branch + CircleCI):
+CI/CD workflow (prod-driven publish + specs branch + CircleCI):
 
-- GitHub Actions (in `.github/workflows/build.yml`) runs on `main`, generates from `build/`, and commits only changed `*.spec`/`*.xml` into the `specs` branch.
-- CircleCI pipeline is configured to build from the `specs` branch only. If nothing changed in `build/` (hence no change committed by Actions), CircleCI won’t rebuild.
-- To force a run locally, ensure `build/` contains updated outputs and push to `main`.
+- On the prod builder host, use Makefile targets to drive the flow.
+- `make circleci-update` (on `main`): updates `.circleci` config when new distros appear and pushes to `origin/main`.
+- `make update` (on `main`): runs the generator via venv, updates `build/`, `src/`, `trusted.yml`, and pushes to `origin/main`.
+- `make specs-publish`: checks out `specs`, mirrors `build/`, `src/`, `.circleci` from `main`, regenerates top-level `*.xml` and `*.spec` via venv, commits only when changed, and pushes to `origin/specs`.
+- CircleCI is configured to build from `specs`; the push from `specs-publish` triggers builds. If nothing changed, no rebuild occurs.
 
 Versioning
 
