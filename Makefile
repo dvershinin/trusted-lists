@@ -14,10 +14,6 @@ clean:
 	rm -rf output/*
 	rm -rf docs/modules.md
 
-# keep rpm target out to restore original Makefile
-
-# drop update-specs to restore original Makefile
-
 .PHONY: update
 update:
 	git fetch origin
@@ -40,9 +36,6 @@ specs-publish:
 	git checkout main -- src
 	git checkout main -- .circleci
 	git checkout main -- Makefile
-	# ensures jinja2 is accessible
-	./venv/bin/pip install -r requirements.txt
-	./venv/bin/pip install jinja2-cli[yaml]
 	# generate top-level specs and copy XMLs if changed
 	for f in build/*.xml; do \
 		name=$$(basename "$$f" .xml); \
