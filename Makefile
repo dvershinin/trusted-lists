@@ -39,6 +39,7 @@ specs-publish:
 	git checkout main -- build
 	git checkout main -- src
 	git checkout main -- .circleci
+	git checkout main -- Makefile
 	# ensures jinja2 is accessible
 	./venv/bin/pip install -r requirements.txt
 	./venv/bin/pip install jinja2-cli[yaml]
@@ -56,6 +57,8 @@ specs-publish:
 	git diff --cached --quiet || git commit -m "Up"
 	# push specs branch
 	git push origin specs
+	# return to main so next invocations use the main Makefile/targets
+	git checkout -f main
 
 .PHONY: circleci-update
 circleci-update:
