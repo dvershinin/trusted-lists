@@ -3,6 +3,7 @@
   <description>Outbound IP ranges used by OpenAI SearchBot, which retrieves content for search-index related features.
 Source: openai.com/searchbot.json (JSON: prefixes[].ipv4Prefix)
 </description>
+  <entry>4.227.36.0/25</entry>
   <entry>20.14.99.96/28</entry>
   <entry>20.25.151.224/28</entry>
   <entry>20.42.10.176/28</entry>
@@ -12,9 +13,11 @@ Source: openai.com/searchbot.json (JSON: prefixes[].ipv4Prefix)
   <entry>20.171.53.224/28</entry>
   <entry>20.171.123.64/28</entry>
   <entry>51.8.102.0/24</entry>
+  <entry>74.7.228.0/25</entry>
   <entry>74.7.228.128/25</entry>
   <entry>74.7.229.0/25</entry>
   <entry>74.7.229.128/25</entry>
+  <entry>74.7.230.0/25</entry>
   <entry>104.210.140.128/28</entry>
   <entry>135.234.64.0/24</entry>
   <entry>172.182.193.80/28</entry>
