@@ -1,7 +1,7 @@
 %global ipset_name openai-searchbot
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251021
+Version:        20251022
 Release:        1%{?dist}
 Summary:        OpenAI SearchBot FirewallD IP set
 License:        BSD

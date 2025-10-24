@@ -1,7 +1,7 @@
 %global ipset_name stripe
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251023
+Version:        20251024
 Release:        1%{?dist}
 Summary:        Stripe FirewallD IP set
 License:        BSD
