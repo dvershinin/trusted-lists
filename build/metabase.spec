@@ -1,7 +1,7 @@
 %global ipset_name metabase
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251022
+Version:        20251024
 Release:        1%{?dist}
 Summary:        Metabase FirewallD IP set
 License:        BSD
