@@ -295,39 +295,6 @@ workflows:
           branches: {only: specs}
         name: deploy-el9-x86_64
         requires: [build-el9-x86_64]
-  build-deploy-fc41-aarch64:
-    jobs:
-    - build:
-        context: org-global
-        dist: fc41
-        filters:
-          branches: {only: specs}
-        name: build-fc41-aarch64
-        resource_class: arm.medium
-    - deploy:
-        arch: aarch64
-        context: org-global
-        dist: fc41
-        filters:
-          branches: {only: specs}
-        name: deploy-fc41-aarch64
-        requires: [build-fc41-aarch64]
-  build-deploy-fc41-x86_64:
-    jobs:
-    - build:
-        context: org-global
-        dist: fc41
-        filters:
-          branches: {only: specs}
-        name: build-fc41-x86_64
-    - deploy:
-        arch: x86_64
-        context: org-global
-        dist: fc41
-        filters:
-          branches: {only: specs}
-        name: deploy-fc41-x86_64
-        requires: [build-fc41-x86_64]
   build-deploy-fc42-aarch64:
     jobs:
     - build:
@@ -361,36 +328,69 @@ workflows:
           branches: {only: specs}
         name: deploy-fc42-x86_64
         requires: [build-fc42-x86_64]
-  build-deploy-sles15-aarch64:
+  build-deploy-fc43-aarch64:
     jobs:
     - build:
         context: org-global
-        dist: sles15
+        dist: fc43
         filters:
           branches: {only: specs}
-        name: build-sles15-aarch64
+        name: build-fc43-aarch64
         resource_class: arm.medium
     - deploy:
         arch: aarch64
         context: org-global
-        dist: sles15
+        dist: fc43
         filters:
           branches: {only: specs}
-        name: deploy-sles15-aarch64
-        requires: [build-sles15-aarch64]
-  build-deploy-sles15-x86_64:
+        name: deploy-fc43-aarch64
+        requires: [build-fc43-aarch64]
+  build-deploy-fc43-x86_64:
     jobs:
     - build:
         context: org-global
-        dist: sles15
+        dist: fc43
         filters:
           branches: {only: specs}
-        name: build-sles15-x86_64
+        name: build-fc43-x86_64
     - deploy:
         arch: x86_64
         context: org-global
-        dist: sles15
+        dist: fc43
         filters:
           branches: {only: specs}
-        name: deploy-sles15-x86_64
-        requires: [build-sles15-x86_64]
+        name: deploy-fc43-x86_64
+        requires: [build-fc43-x86_64]
+  build-deploy-sles16-aarch64:
+    jobs:
+    - build:
+        context: org-global
+        dist: sles16
+        filters:
+          branches: {only: specs}
+        name: build-sles16-aarch64
+        resource_class: arm.medium
+    - deploy:
+        arch: aarch64
+        context: org-global
+        dist: sles16
+        filters:
+          branches: {only: specs}
+        name: deploy-sles16-aarch64
+        requires: [build-sles16-aarch64]
+  build-deploy-sles16-x86_64:
+    jobs:
+    - build:
+        context: org-global
+        dist: sles16
+        filters:
+          branches: {only: specs}
+        name: build-sles16-x86_64
+    - deploy:
+        arch: x86_64
+        context: org-global
+        dist: sles16
+        filters:
+          branches: {only: specs}
+        name: deploy-sles16-x86_64
+        requires: [build-sles16-x86_64]
