@@ -1,7 +1,7 @@
 %global ipset_name openai-gptbot
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251018
+Version:        20251108
 Release:        1%{?dist}
 Summary:        OpenAI GPTBot FirewallD IP set
 License:        BSD
