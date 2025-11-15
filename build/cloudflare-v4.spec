@@ -1,7 +1,7 @@
 %global ipset_name cloudflare-v4
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251113
+Version:        20251115
 Release:        1%{?dist}
 Summary:        Cloudflare-v4 FirewallD IP set
 License:        BSD

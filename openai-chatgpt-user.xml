@@ -7,7 +7,6 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>4.151.71.176/28</entry>
   <entry>4.151.119.48/28</entry>
   <entry>4.151.241.240/28</entry>
-  <entry>4.185.216.109/32</entry>
   <entry>4.196.118.112/28</entry>
   <entry>4.196.198.80/28</entry>
   <entry>4.197.19.176/28</entry>
@@ -18,7 +17,6 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>4.197.64.64/28</entry>
   <entry>4.197.115.112/28</entry>
   <entry>4.205.128.176/28</entry>
-  <entry>12.129.184.64/26</entry>
   <entry>13.65.138.96/28</entry>
   <entry>13.65.138.112/28</entry>
   <entry>13.67.46.240/28</entry>
@@ -43,7 +41,6 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>20.102.212.144/28</entry>
   <entry>20.117.22.224/28</entry>
   <entry>20.161.75.208/28</entry>
-  <entry>20.171.137.175/32</entry>
   <entry>20.193.50.32/28</entry>
   <entry>20.194.0.208/28</entry>
   <entry>20.194.1.0/28</entry>
@@ -57,7 +54,6 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>20.228.106.176/28</entry>
   <entry>20.235.75.208/28</entry>
   <entry>20.235.87.224/28</entry>
-  <entry>20.241.32.36/32</entry>
   <entry>20.249.63.208/28</entry>
   <entry>23.97.109.224/28</entry>
   <entry>23.98.142.176/28</entry>
@@ -72,20 +68,11 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>40.84.181.32/28</entry>
   <entry>40.84.221.208/28</entry>
   <entry>40.84.221.224/28</entry>
-  <entry>40.88.27.77/32</entry>
   <entry>40.116.73.208/28</entry>
-  <entry>40.122.118.93/32</entry>
-  <entry>40.122.118.119/32</entry>
-  <entry>40.122.118.202/32</entry>
-  <entry>48.218.181.198/32</entry>
-  <entry>50.145.17.210/32</entry>
-  <entry>50.235.235.77/32</entry>
-  <entry>50.235.235.78/32</entry>
   <entry>51.8.155.48/28</entry>
   <entry>51.8.155.64/28</entry>
   <entry>51.8.155.80/28</entry>
   <entry>51.8.155.112/28</entry>
-  <entry>52.119.123.85/32</entry>
   <entry>52.148.129.32/28</entry>
   <entry>52.154.22.48/28</entry>
   <entry>52.156.77.144/28</entry>
@@ -132,8 +119,6 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>57.154.174.112/28</entry>
   <entry>57.154.175.0/28</entry>
   <entry>57.154.187.32/28</entry>
-  <entry>64.124.21.196/32</entry>
-  <entry>66.193.99.66/32</entry>
   <entry>68.154.28.96/28</entry>
   <entry>68.218.30.112/28</entry>
   <entry>68.220.57.64/28</entry>
@@ -150,12 +135,9 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>74.249.86.176/28</entry>
   <entry>104.210.139.192/28</entry>
   <entry>104.210.139.224/28</entry>
-  <entry>130.33.24.99/32</entry>
   <entry>132.196.82.48/28</entry>
   <entry>135.119.134.128/28</entry>
   <entry>135.119.134.192/28</entry>
-  <entry>135.220.208.92/32</entry>
-  <entry>135.234.27.89/32</entry>
   <entry>135.237.131.208/28</entry>
   <entry>135.237.133.48/28</entry>
   <entry>135.237.133.112/28</entry>
@@ -165,20 +147,12 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>137.135.191.176/28</entry>
   <entry>138.91.30.48/28</entry>
   <entry>138.91.46.96/28</entry>
-  <entry>148.76.185.195/32</entry>
-  <entry>148.76.185.196/32</entry>
-  <entry>148.76.185.197/32</entry>
   <entry>168.63.252.240/28</entry>
-  <entry>172.167.32.228/32</entry>
-  <entry>172.167.161.96/32</entry>
-  <entry>172.171.234.186/32</entry>
   <entry>172.178.140.144/28</entry>
   <entry>172.178.141.112/28</entry>
   <entry>172.178.141.128/28</entry>
   <entry>172.183.143.224/28</entry>
   <entry>172.183.222.128/28</entry>
-  <entry>172.191.70.179/32</entry>
-  <entry>172.191.238.68/32</entry>
   <entry>172.204.16.64/28</entry>
   <entry>172.212.159.64/28</entry>
   <entry>172.213.11.144/28</entry>
@@ -193,11 +167,4 @@ Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
   <entry>191.235.98.144/28</entry>
   <entry>191.235.99.80/28</entry>
   <entry>191.239.245.16/28</entry>
-  <entry>208.52.97.119/32</entry>
-  <entry>208.80.35.35/32</entry>
-  <entry>208.80.35.36/32</entry>
-  <entry>208.80.35.37/32</entry>
-  <entry>208.80.35.40/32</entry>
-  <entry>209.249.37.128/26</entry>
-  <entry>216.64.170.234/32</entry>
 </ipset>
