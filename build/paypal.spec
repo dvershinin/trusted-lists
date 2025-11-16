@@ -1,7 +1,7 @@
 %global ipset_name paypal
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251115
+Version:        20251116
 Release:        1%{?dist}
 Summary:        Paypal FirewallD IP set
 License:        BSD
