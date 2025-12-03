@@ -1,7 +1,7 @@
 %global ipset_name twitter
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251202
+Version:        20251203
 Release:        1%{?dist}
 Summary:        Twitter FirewallD IP set
 License:        BSD
