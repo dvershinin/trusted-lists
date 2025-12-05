@@ -1,7 +1,7 @@
 %global ipset_name jetpack
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251203
+Version:        20251205
 Release:        1%{?dist}
 Summary:        Jetpack FirewallD IP set
 License:        BSD
