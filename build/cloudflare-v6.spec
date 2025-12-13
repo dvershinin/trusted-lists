@@ -1,7 +1,7 @@
 %global ipset_name cloudflare-v6
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251211
+Version:        20251212
 Release:        1%{?dist}
 Summary:        Cloudflare-v6 FirewallD IP set
 License:        BSD
