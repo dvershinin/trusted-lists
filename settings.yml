@@ -1,0 +1,9 @@
+# CircleCI build settings for trusted-lists
+# All ipset packages are noarch (no architecture-specific binaries)
+archs:
+  - noarch
+
+# Build on specs branch (where the spec files live)
+branches:
+  specs:
+    description: "Specs branch with RPM spec files"

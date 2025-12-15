@@ -47,8 +47,8 @@ specs-publish:
 	# check out files built from main to specs (mirror)
 	git checkout main -- build
 	git checkout main -- src
-	git checkout main -- .circleci
 	git checkout main -- Makefile
+	git checkout main -- settings.yml
 	# generate top-level specs and copy XMLs if changed
 	for f in build/*.xml; do \
 		name=$$(basename "$$f" .xml); \
@@ -58,8 +58,10 @@ specs-publish:
 			./venv/bin/jinja2 src/ipset.spec.j2 "build/$$name.yml" -D version=$$VERSION --outfile="firewalld-ipset-$$name.spec"; \
 		fi; \
 	done
+	# regenerate CircleCI config using buildstrap (reads settings.yml)
+	python3 ~/Projects/buildstrap/generate_circleci_config.py --project-dir .
 	# commit only when there are staged changes
-	git add -- *.spec *.xml .circleci 2>/dev/null || true
+	git add -- *.spec *.xml .circleci settings.yml 2>/dev/null || true
 	git diff --cached --quiet || git commit -m "Up"
 	# push specs branch
 	git push origin specs
