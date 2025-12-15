@@ -1,0 +1,5 @@
+# CircleCI build settings for trusted-lists
+# All ipset packages are noarch (no architecture-specific binaries)
+archs:
+  - noarch
+
