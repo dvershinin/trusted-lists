@@ -1,19 +1,19 @@
-%global ipset_name cloudflare-v4
+%global ipset_name wp-rocket-v4
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        20251215
 Release:        1%{?dist}
-Summary:        cloudflare-v4 FirewallD IP set
+Summary:        WP Rocket cache preloading service IP addresses
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://www.cloudflare.com/ips-v4
+URL:            https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv4.txt
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-cloudflare-v4 FirewallD IP set
+WP Rocket cache preloading service IP addresses
 
 %prep
 # nothing to do

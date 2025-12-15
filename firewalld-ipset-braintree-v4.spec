@@ -1,19 +1,19 @@
-%global ipset_name cloudflare-v4
+%global ipset_name braintree-v4
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        20251215
 Release:        1%{?dist}
-Summary:        cloudflare-v4 FirewallD IP set
+Summary:        Braintree FirewallD IP set
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://www.cloudflare.com/ips-v4
+URL:            https://assets.braintreegateway.com/json/ips.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-cloudflare-v4 FirewallD IP set
+Braintree FirewallD IP set
 
 %prep
 # nothing to do

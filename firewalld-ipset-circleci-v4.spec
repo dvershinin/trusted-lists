@@ -1,19 +1,19 @@
-%global ipset_name cloudflare-v4
+%global ipset_name circleci-v4
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        20251215
 Release:        1%{?dist}
-Summary:        cloudflare-v4 FirewallD IP set
+Summary:        Well-defined IP address ranges. Supported only on paid plans of CircleCI.
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://www.cloudflare.com/ips-v4
+URL:            https://circleci.com/docs/ip-ranges/
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-cloudflare-v4 FirewallD IP set
+Well-defined IP address ranges. Supported only on paid plans of CircleCI.
 
 %prep
 # nothing to do

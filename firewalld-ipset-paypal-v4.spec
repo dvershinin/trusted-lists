@@ -1,19 +1,19 @@
-%global ipset_name cloudflare-v4
+%global ipset_name paypal-v4
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        20251215
 Release:        1%{?dist}
-Summary:        cloudflare-v4 FirewallD IP set
+Summary:        paypal-v4 FirewallD IP set
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://www.cloudflare.com/ips-v4
+URL:            https://www.paypal.com/smarthelp/article-content?article_id=TS1056&isPCC=false&isHomePage=false
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-cloudflare-v4 FirewallD IP set
+paypal-v4 FirewallD IP set
 
 %prep
 # nothing to do

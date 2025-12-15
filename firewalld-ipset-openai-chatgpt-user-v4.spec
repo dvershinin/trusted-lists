@@ -1,19 +1,19 @@
-%global ipset_name cloudflare-v4
+%global ipset_name openai-chatgpt-user-v4
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        20251215
 Release:        1%{?dist}
-Summary:        cloudflare-v4 FirewallD IP set
+Summary:        OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://www.cloudflare.com/ips-v4
+URL:            https://openai.com/chatgpt-user.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-cloudflare-v4 FirewallD IP set
+OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
 
 %prep
 # nothing to do

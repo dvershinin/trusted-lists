@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
-  <description>Cloudflare-v4 FirewallD IP Set</description>
+  <option name="family" value="inet"/>
+  <description>Cloudflare-v4 FirewallD IP Set (inet)</description>
   <entry>103.21.244.0/22</entry>
   <entry>103.22.200.0/22</entry>
   <entry>103.31.4.0/22</entry>

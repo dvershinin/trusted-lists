@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ipset type="hash:net">
+  <option name="family" value="inet6"/>
+  <description>Yandex Search crawler IP ranges (inet6)</description>
+  <entry>2a02:6b8::/29</entry>
+</ipset>

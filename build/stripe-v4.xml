@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ipset type="hash:net">
+  <option name="family" value="inet"/>
+  <description>Stripe FirewallD IP Set (inet)</description>
+  <entry>3.18.12.63/32</entry>
+  <entry>3.130.192.231/32</entry>
+  <entry>13.235.14.237/32</entry>
+  <entry>13.235.122.149/32</entry>
+  <entry>18.211.135.69/32</entry>
+  <entry>35.154.171.200/32</entry>
+  <entry>52.15.183.38/32</entry>
+  <entry>54.88.130.119/32</entry>
+  <entry>54.88.130.237/32</entry>
+  <entry>54.187.174.169/32</entry>
+  <entry>54.187.205.235/32</entry>
+  <entry>54.187.216.72/32</entry>
+</ipset>

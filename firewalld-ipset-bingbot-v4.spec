@@ -1,19 +1,19 @@
-%global ipset_name cloudflare-v4
+%global ipset_name bingbot-v4
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        20251215
 Release:        1%{?dist}
-Summary:        cloudflare-v4 FirewallD IP set
+Summary:        Microsoft Bing crawler IP ranges
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://www.cloudflare.com/ips-v4
+URL:            https://www.bing.com/toolbox/bingbot.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-cloudflare-v4 FirewallD IP set
+Microsoft Bing crawler IP ranges
 
 %prep
 # nothing to do

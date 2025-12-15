@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
-  <description>Cloudflare-v6 FirewallD IP Set</description>
+  <option name="family" value="inet6"/>
+  <description>Cloudflare-v6 FirewallD IP Set (inet6)</description>
   <entry>2400:cb00::/32</entry>
   <entry>2405:8100::/32</entry>
   <entry>2405:b500::/32</entry>

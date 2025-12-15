@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ipset type="hash:net">
+  <option name="family" value="inet"/>
+  <description>Yandex Search crawler IP ranges (inet)</description>
+  <entry>5.45.192.0/18</entry>
+  <entry>5.255.192.0/18</entry>
+  <entry>37.9.64.0/18</entry>
+  <entry>37.140.128.0/18</entry>
+  <entry>77.88.0.0/18</entry>
+  <entry>84.252.160.0/19</entry>
+  <entry>87.250.224.0/19</entry>
+  <entry>90.156.176.0/20</entry>
+  <entry>92.255.112.0/20</entry>
+  <entry>93.158.128.0/18</entry>
+  <entry>95.108.128.0/17</entry>
+  <entry>141.8.128.0/18</entry>
+  <entry>178.154.128.0/18</entry>
+  <entry>185.32.187.0/24</entry>
+  <entry>213.180.192.0/19</entry>
+</ipset>
