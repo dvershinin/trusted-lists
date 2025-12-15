@@ -1,4 +1,5 @@
 description: WP Rocket cache preloading service IP addresses
+family: inet
 items:
 - 5.249.224.0/24
 - 46.30.210.0/24

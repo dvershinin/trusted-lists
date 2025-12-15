@@ -1,4 +1,5 @@
 description: Apple Search crawler (Applebot) IP ranges
+family: inet
 items:
 - 17.22.237.0/24
 - 17.22.245.0/24

@@ -1,12 +1,5 @@
-description: 'Outbound IP ranges used by ChatGPT for user-triggered operations, including
-  ChatGPT Agents (tool calls and HTTP callbacks),
-
-  Actions, and third-party integrations. Use this list to allowlist inbound webhooks
-  or callback endpoints that ChatGPT may call.
-
-  Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
-
-  '
+description: OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
+family: inet
 items:
 - 4.151.71.176/28
 - 4.151.119.48/28
@@ -203,7 +196,7 @@ items:
 - 191.237.249.64/28
 - 191.239.245.16/28
 json_selector: prefixes
-json_value_keys: ipv4Prefix
+json_value_keys:
+- ipv4Prefix
 name: openai-chatgpt-user
-summary: OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
 url: https://openai.com/chatgpt-user.json

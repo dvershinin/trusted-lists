@@ -1,4 +1,5 @@
 description: Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+family: inet
 html_selector: li
 items:
 - 3.210.128.175/32

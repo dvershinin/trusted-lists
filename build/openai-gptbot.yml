@@ -1,9 +1,5 @@
-description: 'Outbound IP ranges used by OpenAI''s GPTBot crawler. This bot fetches
-  pages for training/evaluation per site opt-in.
-
-  Source: openai.com/gptbot.json (JSON: prefixes[].ipv4Prefix)
-
-  '
+description: OpenAI GPTBot crawler IP ranges
+family: inet
 items:
 - 4.227.36.0/25
 - 20.125.66.80/28
@@ -27,7 +23,7 @@ items:
 - 172.182.214.0/24
 - 172.182.215.0/24
 json_selector: prefixes
-json_value_keys: ipv4Prefix
+json_value_keys:
+- ipv4Prefix
 name: openai-gptbot
-summary: OpenAI GPTBot FirewallD IP set
 url: https://openai.com/gptbot.json

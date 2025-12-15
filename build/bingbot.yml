@@ -1,4 +1,5 @@
 description: Microsoft Bing crawler IP ranges
+family: inet
 items:
 - 13.66.139.0/24
 - 13.66.144.0/24
