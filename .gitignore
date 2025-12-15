@@ -6,3 +6,10 @@ sources-openai/
 __pycache__/
 *.pyc
 .pytest_cache/
+# Build artifacts
+output/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
