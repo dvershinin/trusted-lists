@@ -1,19 +1,19 @@
-%global ipset_name circleci
+%global ipset_name googlebot
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        
 Release:        1%{?dist}
-Summary:        Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+Summary:        Google Search crawler (Googlebot) IP ranges
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://circleci.com/docs/ip-ranges/
+URL:            https://developers.google.com/static/search/apis/ipranges/googlebot.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+Google Search crawler (Googlebot) IP ranges
 
 %prep
 # nothing to do

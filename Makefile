@@ -7,6 +7,19 @@ setup:
 	virtualenv-3 ./venv
 	./venv/bin/pip install -r requirements.txt
 
+.PHONY: setup-dev
+setup-dev: setup
+	./venv/bin/pip install pytest pytest-mock responses ruff pre-commit
+	./venv/bin/pre-commit install
+
+.PHONY: test
+test:
+	./venv/bin/python -m pytest tests/ -v
+
+.PHONY: lint
+lint:
+	./venv/bin/python -m ruff check .
+
 
 .PHONY: clean
 clean:

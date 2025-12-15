@@ -1,19 +1,19 @@
-%global ipset_name circleci
+%global ipset_name applebot
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        
 Release:        1%{?dist}
-Summary:        Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+Summary:        Apple Search crawler (Applebot) IP ranges
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://circleci.com/docs/ip-ranges/
+URL:            https://search.developer.apple.com/applebot.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+Apple Search crawler (Applebot) IP ranges
 
 %prep
 # nothing to do

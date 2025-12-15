@@ -1,19 +1,19 @@
-%global ipset_name circleci
+%global ipset_name bingbot
 
 Name:           firewalld-ipset-%{ipset_name}
 Version:        
 Release:        1%{?dist}
-Summary:        Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+Summary:        Microsoft Bing crawler IP ranges
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://circleci.com/docs/ip-ranges/
+URL:            https://www.bing.com/toolbox/bingbot.json
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-Well-defined IP address ranges. Supported only on paid plans of CircleCI.
+Microsoft Bing crawler IP ranges
 
 %prep
 # nothing to do
