@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ipset type="hash:net">
+  <option name="family" value="inet"/>
+  <description>Braintree FirewallD IP set (inet)</description>
+  <entry>3.13.64.186/32</entry>
+  <entry>3.17.123.234/32</entry>
+  <entry>3.105.10.183/32</entry>
+  <entry>3.105.225.84/32</entry>
+  <entry>3.121.81.158/32</entry>
+  <entry>3.121.140.140/32</entry>
+  <entry>3.122.176.248/32</entry>
+  <entry>3.130.159.200/32</entry>
+  <entry>3.210.51.78/32</entry>
+  <entry>3.217.221.47/32</entry>
+  <entry>3.218.50.40/32</entry>
+  <entry>3.219.134.92/32</entry>
+  <entry>13.59.123.211/32</entry>
+  <entry>13.59.221.189/32</entry>
+  <entry>13.236.192.223/32</entry>
+  <entry>13.248.139.42/32</entry>
+  <entry>18.194.163.26/32</entry>
+  <entry>18.219.43.168/32</entry>
+  <entry>18.220.234.250/32</entry>
+  <entry>18.222.16.129/32</entry>
+  <entry>34.226.31.148/32</entry>
+  <entry>34.227.252.232/32</entry>
+  <entry>34.228.35.242/32</entry>
+  <entry>34.233.137.2/32</entry>
+  <entry>35.156.167.229/32</entry>
+  <entry>35.156.220.140/32</entry>
+  <entry>35.163.3.206/32</entry>
+  <entry>52.29.159.59/32</entry>
+  <entry>52.32.253.174/32</entry>
+  <entry>52.40.39.250/32</entry>
+  <entry>52.40.66.148/32</entry>
+  <entry>52.62.69.124/32</entry>
+  <entry>52.63.13.180/32</entry>
+  <entry>52.65.178.175/32</entry>
+  <entry>52.88.213.101/32</entry>
+  <entry>54.69.192.149/32</entry>
+  <entry>54.70.36.105/32</entry>
+  <entry>54.79.127.74/32</entry>
+  <entry>63.146.102.0/26</entry>
+  <entry>64.4.245.128/25</entry>
+  <entry>76.223.13.31/32</entry>
+  <entry>159.242.240.0/21</entry>
+  <entry>184.105.251.192/26</entry>
+  <entry>204.109.13.0/24</entry>
+  <entry>205.219.64.0/26</entry>
+  <entry>209.117.187.192/26</entry>
+</ipset>

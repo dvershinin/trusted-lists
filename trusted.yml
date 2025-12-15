@@ -27,6 +27,28 @@ jetpack:
 twitter:
   url: https://developer.twitter.com/en/docs/twitter-api/enterprise/account-activity-api/guides/securing-webhooks
 
+# OpenAI bots
+openai-gptbot:
+  description: OpenAI GPTBot crawler IP ranges
+  url: https://openai.com/gptbot.json
+  json_selector: "prefixes"
+  json_value_keys:
+    - "ipv4Prefix"
+
+openai-chatgpt-user:
+  description: OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
+  url: https://openai.com/chatgpt-user.json
+  json_selector: "prefixes"
+  json_value_keys:
+    - "ipv4Prefix"
+
+openai-searchbot:
+  description: OpenAI SearchBot IP ranges
+  url: https://openai.com/searchbot.json
+  json_selector: "prefixes"
+  json_value_keys:
+    - "ipv4Prefix"
+
 # Search engine crawlers
 googlebot:
   description: Google Search crawler (Googlebot) IP ranges
