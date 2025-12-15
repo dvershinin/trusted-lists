@@ -113,10 +113,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-el7-noarch
         context: org-global
@@ -125,10 +122,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-el7-noarch
   build-deploy-el8-noarch:
@@ -140,10 +134,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-el8-noarch
         context: org-global
@@ -152,10 +143,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-el8-noarch
   build-deploy-el9-noarch:
@@ -167,10 +155,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-el9-noarch
         context: org-global
@@ -179,10 +164,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-el9-noarch
   build-deploy-el10-noarch:
@@ -194,10 +176,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-el10-noarch
         context: org-global
@@ -206,10 +185,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-el10-noarch
   build-deploy-fc43-noarch:
@@ -221,10 +197,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-fc43-noarch
         context: org-global
@@ -233,10 +206,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-fc43-noarch
   build-deploy-fc42-noarch:
@@ -248,10 +218,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-fc42-noarch
         context: org-global
@@ -260,10 +227,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-fc42-noarch
   build-deploy-amzn2-noarch:
@@ -275,10 +239,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-amzn2-noarch
         context: org-global
@@ -287,10 +248,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-amzn2-noarch
   build-deploy-amzn2023-noarch:
@@ -302,10 +260,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-amzn2023-noarch
         context: org-global
@@ -314,10 +269,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-amzn2023-noarch
   build-deploy-sles16-noarch:
@@ -329,10 +281,7 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
     - deploy:
         name: deploy-sles16-noarch
         context: org-global
@@ -341,9 +290,6 @@ workflows:
         filters:
           branches:
             only:
-            - main
-            - master
-            - stable
-            - main
+            - specs
         requires:
         - build-sles16-noarch

@@ -3,3 +3,7 @@
 archs:
   - noarch
 
+# Build on specs branch (where the spec files live)
+branches:
+  specs:
+    description: "Specs branch with RPM spec files"
