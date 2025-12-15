@@ -27,31 +27,46 @@ jetpack:
 twitter:
   url: https://developer.twitter.com/en/docs/twitter-api/enterprise/account-activity-api/guides/securing-webhooks
 
-openai-gptbot:
-  summary: OpenAI GPTBot FirewallD IP set
-  description: |
-    Outbound IP ranges used by OpenAI's GPTBot crawler. This bot fetches pages for training/evaluation per site opt-in.
-    Source: openai.com/gptbot.json (JSON: prefixes[].ipv4Prefix)
-  url: https://openai.com/gptbot.json
-  json_selector: prefixes
-  # Optionally specify which keys inside objects contain CIDRs
-  json_value_keys: ipv4Prefix
+# Search engine crawlers
+googlebot:
+  description: Google Search crawler (Googlebot) IP ranges
+  url: https://developers.google.com/static/search/apis/ipranges/googlebot.json
+  json_selector: "prefixes"
+  json_value_keys:
+    - "ipv4Prefix"
+    - "ipv6Prefix"
 
-openai-chatgpt-user:
-  summary: OpenAI ChatGPT-User outbound IPs (Agents, Actions, webhooks)
-  description: |
-    Outbound IP ranges used by ChatGPT for user-triggered operations, including ChatGPT Agents (tool calls and HTTP callbacks),
-    Actions, and third-party integrations. Use this list to allowlist inbound webhooks or callback endpoints that ChatGPT may call.
-    Source: openai.com/chatgpt-user.json (JSON: prefixes[].ipv4Prefix)
-  url: https://openai.com/chatgpt-user.json
-  json_selector: prefixes
-  json_value_keys: ipv4Prefix
+bingbot:
+  description: Microsoft Bing crawler IP ranges
+  url: https://www.bing.com/toolbox/bingbot.json
+  json_selector: "prefixes"
+  json_value_keys:
+    - "ipv4Prefix"
+    - "ipv6Prefix"
 
-openai-searchbot:
-  summary: OpenAI SearchBot FirewallD IP set
-  description: |
-    Outbound IP ranges used by OpenAI SearchBot, which retrieves content for search-index related features.
-    Source: openai.com/searchbot.json (JSON: prefixes[].ipv4Prefix)
-  url: https://openai.com/searchbot.json
-  json_selector: prefixes
-  json_value_keys: ipv4Prefix
+applebot:
+  description: Apple Search crawler (Applebot) IP ranges
+  url: https://search.developer.apple.com/applebot.json
+  json_selector: "prefixes"
+  json_value_keys:
+    - "ipv4Prefix"
+    - "ipv6Prefix"
+
+yandex:
+  description: Yandex Search crawler IP ranges
+  url: https://yandex.com/ips
+  simple_headers: true
+  regex: '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}|[0-9a-fA-F:]+::/\d{1,3})'
+
+# WordPress services
+wp-rocket:
+  description: WP Rocket cache preloading service IP addresses
+  url: https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv4.txt
+
+# NOTE: Wordfence page is protected and cannot be scraped automatically.
+# Their IPs would need to be maintained manually if needed.
+# wordfence:
+#   description: Wordfence security scanner IP addresses
+#   url: https://www.wordfence.com/help/advanced/
+#   html_selector: "#servers-and-ip-addresses"
+#   regex: '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:/\d{1,2})?)'

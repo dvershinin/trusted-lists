@@ -3,3 +3,6 @@ output/
 # Keep build/ tracked for diff-based workflow
 state/
 sources-openai/
+__pycache__/
+*.pyc
+.pytest_cache/

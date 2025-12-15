@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.8
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: validate-trusted-yml
+        name: Validate trusted.yml
+        entry: python -c "import yaml; yaml.safe_load(open('trusted.yml'))"
+        language: system
+        files: trusted\.yml$
+        pass_filenames: false
+
+      - id: run-tests
+        name: Run pytest
+        entry: pytest tests/ -q
+        language: system
+        pass_filenames: false
+        always_run: true
+

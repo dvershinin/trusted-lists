@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 from xml.etree.ElementTree import Element
 
 import requests
@@ -6,121 +7,121 @@ import yaml
 from bs4 import BeautifulSoup
 from ipaddress import IPv4Network, AddressValueError, IPv6Network, get_mixed_type_key
 from lxml import etree
-from datetime import datetime
-import os
-import re
-from jinja2 import Environment, FileSystemLoader
-from email.utils import parsedate_to_datetime
+
 
 def try_add_ip_or_range(network_s, networks):
+    """Try to parse and add an IP or network range to the list."""
+    if not network_s or not network_s.strip():
+        return
+    network_s = network_s.strip()
     try:
-        networks.append(
-            IPv4Network(network_s)
-        )
-    except AddressValueError:
+        networks.append(IPv4Network(network_s))
+    except (AddressValueError, ValueError):
         try:
-            networks.append(
-                IPv6Network(network_s)
-            )
-        except AddressValueError:
+            networks.append(IPv6Network(network_s))
+        except (AddressValueError, ValueError):
             pass
 
 
-script_dir = os.path.abspath(os.path.dirname(__file__))
-build_dir = os.path.join(script_dir, "build")
-os.makedirs(build_dir, exist_ok=True)
+def extract_with_regex(text, pattern, networks):
+    """Extract IPs using a regex pattern."""
+    compiled = re.compile(pattern)
+    matches = compiled.findall(text)
+    for match in matches:
+        try_add_ip_or_range(match, networks)
 
-env = Environment(loader=FileSystemLoader(os.path.join(script_dir, "src")))
-ipset_spec_tpl = env.get_template("ipset.spec.j2")
 
-with open(os.path.join(script_dir, "trusted.yml"), "r") as stream:
+def extract_json_value_keys(items, keys, networks):
+    """Extract IPs from nested JSON objects using specified keys."""
+    for item in items:
+        if isinstance(item, dict):
+            for key in keys:
+                if key in item and item[key]:
+                    try_add_ip_or_range(item[key], networks)
+
+
+with open("trusted.yml", "r") as stream:
     try:
         trusted_lists = yaml.safe_load(stream)
-
         for list_name, list_config in trusted_lists.items():
-            print(list_name)
-            print(list_config)
+            print(f"Processing: {list_name}")
+            print(f"Config: {list_config}")
             networks = []
-            list_content_r = requests.get(
-                list_config['url'],
-                headers={
-                    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-                    'cookie': 'enforce_policy=ccpa; LANG=en_US%3BUS; tsrce=smarthelpnodeweb',
+            # Choose headers based on config
+            if list_config.get('simple_headers'):
+                # Minimal headers for sites that block complex accept headers
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (compatible; trusted-lists/1.0)',
                 }
-            )
+            else:
+                # Full browser-like headers for most sites
+                headers = {
+                    'accept': 'text/html,application/xhtml+xml,application/xml;'
+                              'q=0.9,image/avif,image/webp,image/apng,*/*;'
+                              'q=0.8,application/signed-exchange;v=b3;q=0.9',
+                    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
+                                  '(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+                }
+            # PayPal requires specific cookies to access content
+            if 'paypal.com' in list_config['url']:
+                headers['cookie'] = 'enforce_policy=ccpa; LANG=en_US%3BUS; tsrce=smarthelpnodeweb'
+
+            list_content_r = requests.get(list_config['url'], headers=headers)
             content_type = list_content_r.headers['content-type'].split(';').pop(0).strip()
-            # Default version base: try upstream creationTime or Last-Modified; fallback to today's date (as string)
-            base_version_value = datetime.utcnow().strftime('%Y%m%d')
-            if content_type == 'text/plain':
+
+            # Regex extraction (can work with any content type)
+            if 'regex' in list_config:
+                # If html_selector is specified, extract from that element first
+                if 'html_selector' in list_config:
+                    soup = BeautifulSoup(list_content_r.text, 'html.parser')
+                    html_elems = soup.select(list_config['html_selector'])
+                    for elem in html_elems:
+                        extract_with_regex(elem.get_text(), list_config['regex'], networks)
+                else:
+                    extract_with_regex(list_content_r.text, list_config['regex'], networks)
+                print(f"Extracted {len(networks)} networks via regex")
+
+            elif content_type == 'text/plain':
                 list_items = list_content_r.text.splitlines()
                 print(list_items)
                 for item in list_items:
                     try_add_ip_or_range(item, networks)
                 print(networks)
+
             elif content_type == 'application/json':
                 data = list_content_r.json()
-                # If upstream provides creationTime, prefer it for version base
-                if isinstance(data, dict) and 'creationTime' in data:
-                    try:
-                        # Extract YYYY-MM-DD and convert to YYYYMMDD for Py3.6 compat
-                        m = re.match(r"(\d{4})-(\d{2})-(\d{2})", str(data['creationTime']))
-                        if m:
-                            base_version_value = f"{m.group(1)}{m.group(2)}{m.group(3)}"
-                    except Exception:
-                        pass
                 json_selectors = []
                 if 'json_selector' in list_config:
                     if not isinstance(list_config['json_selector'], list):
                         json_selectors.append(list_config['json_selector'])
                     else:
                         json_selectors = list_config['json_selector']
+
                 for json_selector in json_selectors:
                     json_parent_tree = json_selector.split('.')
                     target_element = data.copy()
                     for elem in json_parent_tree:
                         target_element = target_element[elem]
                     print(target_element)
-                    if 'html_selector' in list_config:
+
+                    # New: json_value_keys extraction for nested objects
+                    if 'json_value_keys' in list_config:
+                        extract_json_value_keys(
+                            target_element,
+                            list_config['json_value_keys'],
+                            networks
+                        )
+                    elif 'html_selector' in list_config:
                         soup = BeautifulSoup(target_element, 'html.parser')
                         list_items = soup.select(list_config['html_selector'])
                         for item in list_items:
-                            item = item.text
-                            try_add_ip_or_range(item, networks)
+                            try_add_ip_or_range(item.text, networks)
                         print(list_items)
                     else:
-                        # target_element can be a list of strings or dicts
                         for item in target_element:
-                            if isinstance(item, dict):
-                                # If configured, use specific value keys from YAML
-                                value_keys = []
-                                if 'json_value_keys' in list_config:
-                                    if isinstance(list_config['json_value_keys'], list):
-                                        value_keys = list_config['json_value_keys']
-                                    else:
-                                        value_keys = [list_config['json_value_keys']]
-                                if value_keys:
-                                    for k in value_keys:
-                                        if k in item:
-                                            v = item[k]
-                                            if isinstance(v, list):
-                                                for vv in v:
-                                                    if isinstance(vv, str):
-                                                        try_add_ip_or_range(vv, networks)
-                                            elif isinstance(v, str):
-                                                try_add_ip_or_range(v, networks)
-                                else:
-                                    # Auto-detect: try all string values
-                                    for v in item.values():
-                                        if isinstance(v, list):
-                                            for vv in v:
-                                                if isinstance(vv, str):
-                                                    try_add_ip_or_range(vv, networks)
-                                        elif isinstance(v, str):
-                                            try_add_ip_or_range(v, networks)
-                            else:
-                                try_add_ip_or_range(item, networks)
+                            try_add_ip_or_range(item, networks)
                 print(networks)
+
             elif content_type == 'text/html':
                 soup = BeautifulSoup(list_content_r.text, 'html.parser')
                 print(list_content_r)
@@ -134,21 +135,12 @@ with open(os.path.join(script_dir, "trusted.yml"), "r") as stream:
                 for item in list_items:
                     try_add_ip_or_range(item, networks)
                 print(networks)
-            networks = sorted(networks, key=get_mixed_type_key)
 
-            # Try Last-Modified header as a version base if no creationTime-derived date
-            if base_version_value == datetime.utcnow().strftime('%Y%m%d'):
-                try:
-                    last_mod = list_content_r.headers.get('last-modified') or list_content_r.headers.get('Last-Modified')
-                    if last_mod:
-                        dt = parsedate_to_datetime(last_mod)
-                        base_version_value = dt.strftime('%Y%m%d')
-                except Exception:
-                    pass
+            # Deduplicate and sort networks
+            networks = sorted(set(networks), key=get_mixed_type_key)
+            print(f"Total networks for {list_name}: {len(networks)}")
 
-            # Version derived purely from upstream timestamps
-            version_value = base_version_value
-            with open(os.path.join(build_dir, f"{list_name}.txt"), 'w') as f:
+            with open(f"./build/{list_name}.txt", 'w') as f:
                 for n in networks:
                     f.write(str(n) + "\n")
 
@@ -161,7 +153,7 @@ with open(os.path.join(script_dir, "trusted.yml"), "r") as stream:
             for n in networks:
                 etree.SubElement(root, 'entry').text = str(n)
             root.getroottree().write(
-                os.path.join(build_dir, f'{list_name}.xml'),
+                f'./build/{list_name}.xml',
                 xml_declaration=True,
                 encoding="utf-8",
                 pretty_print=True
@@ -172,23 +164,7 @@ with open(os.path.join(script_dir, "trusted.yml"), "r") as stream:
             list_data['items'] = []
             for n in networks:
                 list_data['items'].append(str(n))
-            with open(os.path.join(build_dir, f'{list_name}.yml'), 'w') as f:
+            with open(f'./build/{list_name}.yml', 'w') as f:
                 yaml.dump(list_data, f)
-
-            # Render RPM spec for this list (support summary vs long description)
-            summary_value = list_data.get('summary', list_data.get('description', f"{list_name.capitalize()} FirewallD IP set"))
-            long_desc_value = list_data.get('description', summary_value)
-            spec_content = ipset_spec_tpl.render(
-                name=list_name,
-                version=version_value,
-                url=list_data.get('url', ''),
-                summary=summary_value,
-                long_description=long_desc_value,
-            )
-            spec_path = os.path.join(build_dir, f"{list_name}.spec")
-            with open(spec_path, 'w') as f:
-                f.write(spec_content)
-
-        # no persistent state; versions are derived from upstream timestamps
     except yaml.YAMLError as exc:
         print(exc)
