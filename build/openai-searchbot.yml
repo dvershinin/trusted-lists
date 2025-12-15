@@ -38,5 +38,5 @@ items:
 json_selector: prefixes
 json_value_keys:
 - ipv4Prefix
-name: openai-searchbot-v4
+name: openai-searchbot
 url: https://openai.com/searchbot.json

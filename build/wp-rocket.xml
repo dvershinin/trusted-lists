@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>WP Rocket cache preloading service IP addresses (inet)</description>
+  <description>WP Rocket cache preloading service IP addresses</description>
   <entry>5.249.224.0/24</entry>
   <entry>46.30.210.0/24</entry>
   <entry>46.30.211.0/24</entry>

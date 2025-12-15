@@ -22,5 +22,5 @@ items:
 - 190.93.240.0/20
 - 197.234.240.0/22
 - 198.41.128.0/17
-name: wp-rocket-v4
+name: wp-rocket
 url: https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv4.txt

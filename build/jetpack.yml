@@ -8,5 +8,5 @@ items:
 - 192.0.96.0/20
 - 192.0.112.0/20
 - 195.234.108.0/22
-name: jetpack-v4
+name: jetpack
 url: https://jetpack.com/ips-v4.txt

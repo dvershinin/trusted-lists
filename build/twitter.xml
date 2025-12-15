@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>Twitter FirewallD IP Set (inet)</description>
+  <description>Twitter FirewallD IP Set</description>
   <entry>64.63.15.0/24</entry>
   <entry>64.63.31.0/24</entry>
   <entry>64.63.47.0/24</entry>

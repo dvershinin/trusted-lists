@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>Stripe FirewallD IP Set (inet)</description>
+  <description>Stripe FirewallD IP Set</description>
   <entry>3.18.12.63/32</entry>
   <entry>3.130.192.231/32</entry>
   <entry>13.235.14.237/32</entry>

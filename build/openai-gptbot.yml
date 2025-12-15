@@ -25,5 +25,5 @@ items:
 json_selector: prefixes
 json_value_keys:
 - ipv4Prefix
-name: openai-gptbot-v4
+name: openai-gptbot
 url: https://openai.com/gptbot.json

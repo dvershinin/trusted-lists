@@ -33,5 +33,5 @@ json_selector: prefixes
 json_value_keys:
 - ipv4Prefix
 - ipv6Prefix
-name: bingbot-v4
+name: bingbot
 url: https://www.bing.com/toolbox/bingbot.json

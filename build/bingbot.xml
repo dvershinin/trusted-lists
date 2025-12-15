@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>Microsoft Bing crawler IP ranges (inet)</description>
+  <description>Microsoft Bing crawler IP ranges</description>
   <entry>13.66.139.0/24</entry>
   <entry>13.66.144.0/24</entry>
   <entry>13.67.10.16/28</entry>

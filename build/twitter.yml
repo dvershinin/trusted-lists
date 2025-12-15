@@ -9,5 +9,5 @@ items:
 - 202.160.128.0/24
 - 202.160.129.0/24
 - 202.160.130.0/24
-name: twitter-v4
+name: twitter
 url: https://developer.twitter.com/en/docs/twitter-api/enterprise/account-activity-api/guides/securing-webhooks

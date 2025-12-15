@@ -40,20 +40,21 @@ def extract_json_value_keys(items, keys, ipv4_networks, ipv6_networks):
                     try_add_ip_or_range(item[key], ipv4_networks, ipv6_networks)
 
 
-def write_ipset_files(list_name, networks, family, description, list_config):
-    """Write TXT, XML, and YML files for an ipset."""
+def write_ipset_files(output_name, networks, family, description, list_config):
+    """Write TXT, XML, and YML files for an ipset.
+
+    Args:
+        output_name: The final output filename (without extension)
+        networks: List of network objects (IPv4Network or IPv6Network)
+        family: "inet" for IPv4, "inet6" for IPv6
+        description: Description text for the ipset
+        list_config: Original config dict from trusted.yml
+    """
     if not networks:
         return
 
     # Deduplicate and sort
     networks = sorted(set(networks))
-
-    suffix = "-v4" if family == "inet" else "-v6"
-    # Only add suffix if the original list doesn't already have -v4/-v6 in name
-    if list_name.endswith("-v4") or list_name.endswith("-v6"):
-        output_name = list_name
-    else:
-        output_name = f"{list_name}{suffix}"
 
     print(f"  Writing {output_name}: {len(networks)} networks ({family})")
 
@@ -67,8 +68,7 @@ def write_ipset_files(list_name, networks, family, description, list_config):
     root.set('type', 'hash:net')
     etree.SubElement(root, 'option').set('name', 'family')
     root.find('option').set('value', family)
-    desc_text = f"{description} ({family})"
-    etree.SubElement(root, 'description').text = desc_text
+    etree.SubElement(root, 'description').text = description
     for n in networks:
         etree.SubElement(root, 'entry').text = str(n)
     root.getroottree().write(
@@ -85,6 +85,25 @@ def write_ipset_files(list_name, networks, family, description, list_config):
     list_data['items'] = [str(n) for n in networks]
     with open(f'./build/{output_name}.yml', 'w') as f:
         yaml.dump(list_data, f)
+
+
+def get_output_name(list_name, family, has_both_families):
+    """Determine output filename based on naming strategy.
+
+    Naming rules:
+    1. If list_name already ends with -v4 or -v6, use as-is
+    2. If source has BOTH IPv4 and IPv6, add -v4/-v6 suffix
+    3. If source has only one family, use list_name without suffix (backward compatible)
+    """
+    if list_name.endswith("-v4") or list_name.endswith("-v6"):
+        return list_name
+
+    if has_both_families:
+        suffix = "-v4" if family == "inet" else "-v6"
+        return f"{list_name}{suffix}"
+
+    # Single family - no suffix for backward compatibility
+    return list_name
 
 
 with open("trusted.yml", "r") as stream:
@@ -179,11 +198,18 @@ with open("trusted.yml", "r") as stream:
             description = list_config.get('description',
                                           f"{list_name.capitalize()} FirewallD IP Set")
 
-            # Determine if list name already specifies a version
+            # Deduplicate before checking
+            ipv4_networks = list(set(ipv4_networks))
+            ipv6_networks = list(set(ipv6_networks))
+
+            # Determine if source has both address families
+            has_both_families = bool(ipv4_networks) and bool(ipv6_networks)
+
+            # Check if list name already specifies a version
             has_version_suffix = list_name.endswith("-v4") or list_name.endswith("-v6")
 
             if has_version_suffix:
-                # List already specifies version, write as-is
+                # List already specifies version in config, write as-is
                 if list_name.endswith("-v4"):
                     write_ipset_files(list_name, ipv4_networks, "inet",
                                       description, list_config)
@@ -191,13 +217,19 @@ with open("trusted.yml", "r") as stream:
                     write_ipset_files(list_name, ipv6_networks, "inet6",
                                       description, list_config)
             else:
-                # Auto-split into v4 and v6 variants
-                write_ipset_files(list_name, ipv4_networks, "inet",
-                                  description, list_config)
-                write_ipset_files(list_name, ipv6_networks, "inet6",
-                                  description, list_config)
+                # Determine output names based on whether both families exist
+                if ipv4_networks:
+                    v4_name = get_output_name(list_name, "inet", has_both_families)
+                    v4_desc = f"{description} (inet)" if has_both_families else description
+                    write_ipset_files(v4_name, ipv4_networks, "inet",
+                                      v4_desc, list_config)
+                if ipv6_networks:
+                    v6_name = get_output_name(list_name, "inet6", has_both_families)
+                    v6_desc = f"{description} (inet6)" if has_both_families else description
+                    write_ipset_files(v6_name, ipv6_networks, "inet6",
+                                      v6_desc, list_config)
 
-            total = len(set(ipv4_networks)) + len(set(ipv6_networks))
+            total = len(ipv4_networks) + len(ipv6_networks)
             print(f"Total networks for {list_name}: {total}")
 
     except yaml.YAMLError as exc:

@@ -17,5 +17,5 @@ json_selector: prefixes
 json_value_keys:
 - ipv4Prefix
 - ipv6Prefix
-name: applebot-v4
+name: applebot
 url: https://search.developer.apple.com/applebot.json

@@ -12,5 +12,5 @@ items:
 - 54.187.174.169/32
 - 54.187.205.235/32
 - 54.187.216.72/32
-name: stripe-v4
+name: stripe
 url: https://stripe.com/files/ips/ips_webhooks.txt

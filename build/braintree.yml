@@ -50,5 +50,5 @@ items:
 json_selector:
 - production.cidrs
 - production.ips
-name: braintree-v4
+name: braintree
 url: https://assets.braintreegateway.com/json/ips.json

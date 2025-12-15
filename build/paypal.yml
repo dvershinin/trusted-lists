@@ -10,5 +10,5 @@ items:
 - 192.160.215.0/24
 - 198.54.216.0/23
 json_selector: articleContent.articleContent
-name: paypal-v4
+name: paypal
 url: https://www.paypal.com/smarthelp/article-content?article_id=TS1056&isPCC=false&isHomePage=false

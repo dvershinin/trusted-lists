@@ -33,5 +33,5 @@ items:
 - 54.208.72.234/32
 - 54.209.115.53/32
 - 54.236.156.101/32
-name: circleci-v4
+name: circleci
 url: https://circleci.com/docs/ip-ranges/

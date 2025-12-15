@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>Jetpack FirewallD IP Set (inet)</description>
+  <description>Jetpack FirewallD IP Set</description>
   <entry>54.217.201.243/32</entry>
   <entry>54.232.116.4/32</entry>
   <entry>122.248.245.244/32</entry>

@@ -198,5 +198,5 @@ items:
 json_selector: prefixes
 json_value_keys:
 - ipv4Prefix
-name: openai-chatgpt-user-v4
+name: openai-chatgpt-user
 url: https://openai.com/chatgpt-user.json

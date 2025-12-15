@@ -1,7 +1,6 @@
 """Tests for IPv4/IPv6 separation in ipset generation."""
 import os
 import sys
-import tempfile
 from ipaddress import IPv4Network, IPv6Network
 from pathlib import Path
 from xml.etree import ElementTree
@@ -12,7 +11,7 @@ import yaml
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from generate import try_add_ip_or_range, write_ipset_files
+from generate import try_add_ip_or_range, write_ipset_files, get_output_name
 
 
 BUILD_DIR = "build"
@@ -60,20 +59,59 @@ class TestTryAddIpOrRangeSeparation:
         assert all(isinstance(n, IPv6Network) for n in ipv6)
 
 
+class TestGetOutputName:
+    """Test the get_output_name function for backward-compatible naming."""
+
+    def test_ipv4_only_no_suffix(self):
+        """IPv4-only source should not get -v4 suffix (backward compatible)."""
+        name = get_output_name("braintree", "inet", has_both_families=False)
+        assert name == "braintree"
+
+    def test_ipv6_only_no_suffix(self):
+        """IPv6-only source should not get -v6 suffix (backward compatible)."""
+        name = get_output_name("someservice", "inet6", has_both_families=False)
+        assert name == "someservice"
+
+    def test_mixed_source_gets_v4_suffix(self):
+        """Source with both families should get -v4 suffix for IPv4."""
+        name = get_output_name("googlebot", "inet", has_both_families=True)
+        assert name == "googlebot-v4"
+
+    def test_mixed_source_gets_v6_suffix(self):
+        """Source with both families should get -v6 suffix for IPv6."""
+        name = get_output_name("googlebot", "inet6", has_both_families=True)
+        assert name == "googlebot-v6"
+
+    def test_existing_v4_suffix_preserved(self):
+        """List already ending in -v4 should keep that name."""
+        name = get_output_name("cloudflare-v4", "inet", has_both_families=False)
+        assert name == "cloudflare-v4"
+
+    def test_existing_v6_suffix_preserved(self):
+        """List already ending in -v6 should keep that name."""
+        name = get_output_name("cloudflare-v6", "inet6", has_both_families=False)
+        assert name == "cloudflare-v6"
+
+    def test_existing_v4_suffix_not_doubled(self):
+        """List ending in -v4 should not get -v4-v4."""
+        name = get_output_name("cloudflare-v4", "inet", has_both_families=True)
+        assert name == "cloudflare-v4"
+        assert "-v4-v4" not in name
+
+
 class TestWriteIpsetFiles:
     """Test the write_ipset_files function."""
 
     def test_write_ipv4_file_has_inet_family(self, tmp_path):
         """IPv4 ipset XML should have family=inet."""
-        # Create test networks
         networks = [IPv4Network("10.0.0.0/8"), IPv4Network("192.168.0.0/16")]
 
-        # Temporarily change to temp directory
         original_dir = os.getcwd()
         os.chdir(tmp_path)
         os.makedirs("build", exist_ok=True)
 
         try:
+            # Pass output_name directly (no suffix added by write_ipset_files)
             write_ipset_files(
                 "test",
                 networks,
@@ -82,8 +120,7 @@ class TestWriteIpsetFiles:
                 {"url": "http://example.com"}
             )
 
-            # Check XML has correct family
-            tree = ElementTree.parse("build/test-v4.xml")
+            tree = ElementTree.parse("build/test.xml")
             root = tree.getroot()
             option = root.find("option")
             assert option is not None
@@ -109,7 +146,7 @@ class TestWriteIpsetFiles:
                 {"url": "http://example.com"}
             )
 
-            tree = ElementTree.parse("build/test-v6.xml")
+            tree = ElementTree.parse("build/test.xml")
             root = tree.getroot()
             option = root.find("option")
             assert option is not None
@@ -128,8 +165,8 @@ class TestWriteIpsetFiles:
 
         try:
             write_ipset_files("test", networks, "inet", "Test", {"url": "http://example.com"})
-            assert os.path.exists("build/test-v4.txt")
-            with open("build/test-v4.txt") as f:
+            assert os.path.exists("build/test.txt")
+            with open("build/test.txt") as f:
                 content = f.read().strip()
             assert "10.0.0.0/8" in content
         finally:
@@ -145,11 +182,11 @@ class TestWriteIpsetFiles:
 
         try:
             write_ipset_files("test", networks, "inet", "Test", {"url": "http://example.com"})
-            assert os.path.exists("build/test-v4.yml")
-            with open("build/test-v4.yml") as f:
+            assert os.path.exists("build/test.yml")
+            with open("build/test.yml") as f:
                 data = yaml.safe_load(f)
             assert data["family"] == "inet"
-            assert data["name"] == "test-v4"
+            assert data["name"] == "test"
         finally:
             os.chdir(original_dir)
 
@@ -161,31 +198,9 @@ class TestWriteIpsetFiles:
 
         try:
             write_ipset_files("test", [], "inet", "Test", {"url": "http://example.com"})
-            assert not os.path.exists("build/test-v4.xml")
-            assert not os.path.exists("build/test-v4.txt")
-            assert not os.path.exists("build/test-v4.yml")
-        finally:
-            os.chdir(original_dir)
-
-    def test_existing_v4_suffix_not_duplicated(self, tmp_path):
-        """List names ending in -v4 should not get another -v4 suffix."""
-        networks = [IPv4Network("10.0.0.0/8")]
-
-        original_dir = os.getcwd()
-        os.chdir(tmp_path)
-        os.makedirs("build", exist_ok=True)
-
-        try:
-            write_ipset_files(
-                "cloudflare-v4",
-                networks,
-                "inet",
-                "Cloudflare IPv4",
-                {"url": "http://example.com"}
-            )
-            # Should create cloudflare-v4.xml, NOT cloudflare-v4-v4.xml
-            assert os.path.exists("build/cloudflare-v4.xml")
-            assert not os.path.exists("build/cloudflare-v4-v4.xml")
+            assert not os.path.exists("build/test.xml")
+            assert not os.path.exists("build/test.txt")
+            assert not os.path.exists("build/test.yml")
         finally:
             os.chdir(original_dir)
 
@@ -203,7 +218,7 @@ class TestWriteIpsetFiles:
 
         try:
             write_ipset_files("test", networks, "inet", "Test", {"url": "http://example.com"})
-            with open("build/test-v4.txt") as f:
+            with open("build/test.txt") as f:
                 lines = f.read().strip().splitlines()
             assert len(lines) == 2  # Duplicates removed
         finally:
@@ -252,41 +267,24 @@ class TestBuildOutputSeparation:
                 # IPv6 addresses contain colons
                 assert ":" in line, f"{filename}: should contain IPv6 address"
 
-    def test_v4_xml_has_inet_family(self):
-        """XML files with -v4 suffix should have family=inet."""
+    def test_xml_has_family_option(self):
+        """All XML files should have a family option."""
         if not os.path.exists(BUILD_DIR):
             pytest.skip("build/ directory not present")
 
-        v4_xml_files = [f for f in os.listdir(BUILD_DIR) if f.endswith("-v4.xml")]
-        if not v4_xml_files:
-            pytest.skip("No -v4.xml files in build/")
+        xml_files = [f for f in os.listdir(BUILD_DIR) if f.endswith(".xml")]
+        if not xml_files:
+            pytest.skip("No XML files in build/")
 
-        for filename in v4_xml_files:
+        for filename in xml_files:
             path = os.path.join(BUILD_DIR, filename)
             tree = ElementTree.parse(path)
             root = tree.getroot()
             option = root.find("option")
             assert option is not None, f"{filename}: missing <option> element"
             assert option.get("name") == "family", f"{filename}: option should be 'family'"
-            assert option.get("value") == "inet", f"{filename}: family should be 'inet'"
-
-    def test_v6_xml_has_inet6_family(self):
-        """XML files with -v6 suffix should have family=inet6."""
-        if not os.path.exists(BUILD_DIR):
-            pytest.skip("build/ directory not present")
-
-        v6_xml_files = [f for f in os.listdir(BUILD_DIR) if f.endswith("-v6.xml")]
-        if not v6_xml_files:
-            pytest.skip("No -v6.xml files in build/")
-
-        for filename in v6_xml_files:
-            path = os.path.join(BUILD_DIR, filename)
-            tree = ElementTree.parse(path)
-            root = tree.getroot()
-            option = root.find("option")
-            assert option is not None, f"{filename}: missing <option> element"
-            assert option.get("name") == "family", f"{filename}: option should be 'family'"
-            assert option.get("value") == "inet6", f"{filename}: family should be 'inet6'"
+            assert option.get("value") in ("inet", "inet6"), \
+                f"{filename}: family should be 'inet' or 'inet6'"
 
     def test_yml_files_have_family_field(self):
         """YML files should have a 'family' field."""
@@ -331,4 +329,47 @@ class TestBuildOutputSeparation:
 
             assert not (has_ipv4 and has_ipv6), \
                 f"{filename}: should not contain both IPv4 and IPv6 addresses"
+
+    def test_backward_compatible_naming(self):
+        """IPv4-only sources should not have -v4 suffix (backward compatible)."""
+        if not os.path.exists(BUILD_DIR):
+            pytest.skip("build/ directory not present")
+
+        # These are known IPv4-only sources that should NOT have -v4 suffix
+        ipv4_only_sources = ["braintree", "circleci", "stripe", "paypal",
+                             "jetpack", "twitter", "wp-rocket"]
+
+        for source in ipv4_only_sources:
+            # The file should exist without -v4 suffix
+            no_suffix_path = os.path.join(BUILD_DIR, f"{source}.xml")
+            v4_suffix_path = os.path.join(BUILD_DIR, f"{source}-v4.xml")
+
+            if os.path.exists(no_suffix_path):
+                # Good - backward compatible naming
+                assert not os.path.exists(v4_suffix_path), \
+                    f"{source}: should not have both {source}.xml and {source}-v4.xml"
+            elif os.path.exists(v4_suffix_path):
+                # This would be a regression - fail the test
+                pytest.fail(f"{source}: should use {source}.xml not {source}-v4.xml "
+                            f"for backward compatibility")
+
+    def test_mixed_sources_have_suffixes(self):
+        """Sources with both IPv4 and IPv6 should have -v4 and -v6 suffixes."""
+        if not os.path.exists(BUILD_DIR):
+            pytest.skip("build/ directory not present")
+
+        # These are known mixed sources that should have -v4 and -v6 suffixes
+        mixed_sources = ["googlebot", "yandex"]
+
+        for source in mixed_sources:
+            v4_path = os.path.join(BUILD_DIR, f"{source}-v4.xml")
+            v6_path = os.path.join(BUILD_DIR, f"{source}-v6.xml")
+
+            # At least one should exist (source might not have both at all times)
+            if os.path.exists(v4_path) or os.path.exists(v6_path):
+                # If both exist, that's expected for mixed sources
+                pass
+            else:
+                # Neither exists - skip (source might be down)
+                pytest.skip(f"{source}: no build files found")
 

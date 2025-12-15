@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>Apple Search crawler (Applebot) IP ranges (inet)</description>
+  <description>Apple Search crawler (Applebot) IP ranges</description>
   <entry>17.22.237.0/24</entry>
   <entry>17.22.245.0/24</entry>
   <entry>17.22.253.0/24</entry>

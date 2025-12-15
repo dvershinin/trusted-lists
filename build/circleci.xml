@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ipset type="hash:net">
   <option name="family" value="inet"/>
-  <description>Well-defined IP address ranges. Supported only on paid plans of CircleCI. (inet)</description>
+  <description>Well-defined IP address ranges. Supported only on paid plans of CircleCI.</description>
   <entry>3.210.128.175/32</entry>
   <entry>3.228.39.90/32</entry>
   <entry>18.213.67.41/32</entry>
