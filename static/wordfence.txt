@@ -1,0 +1,9 @@
+# Wordfence security scanner IP addresses
+# Source: https://www.wordfence.com/help/advanced/
+# Last updated: 2025-12-19
+44.235.211.232
+54.68.32.247
+54.71.203.174
+35.83.41.128
+52.25.185.95
+54.148.171.133

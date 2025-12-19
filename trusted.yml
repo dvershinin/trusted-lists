@@ -81,14 +81,16 @@ yandex:
   regex: '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}|[0-9a-fA-F:]+::/\d{1,3})'
 
 # WordPress services
-wp-rocket:
-  description: WP Rocket cache preloading service IP addresses
+wp-rocket-v4:
+  description: WP Rocket cache preloading service IPv4 addresses
   url: https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv4.txt
 
-# NOTE: Wordfence page is protected and cannot be scraped automatically.
-# Their IPs would need to be maintained manually if needed.
-# wordfence:
-#   description: Wordfence security scanner IP addresses
-#   url: https://www.wordfence.com/help/advanced/
-#   html_selector: "#servers-and-ip-addresses"
-#   regex: '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:/\d{1,2})?)'
+wp-rocket-v6:
+  description: WP Rocket cache preloading service IPv6 addresses
+  url: https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv6.txt
+
+# Wordfence scanner IPs - maintained via static file (their page is protected)
+# To update: get IPs from https://www.wordfence.com/help/advanced/
+wordfence:
+  description: Wordfence security scanner IP addresses
+  static_file: static/wordfence.txt

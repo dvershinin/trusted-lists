@@ -115,84 +115,100 @@ with open("trusted.yml", "r") as stream:
             ipv4_networks = []
             ipv6_networks = []
 
-            # Choose headers based on config
-            if list_config.get('simple_headers'):
-                headers = {
-                    'user-agent': 'Mozilla/5.0 (compatible; trusted-lists/1.0)',
-                }
+            # Handle static file sources (manually maintained)
+            if 'static_file' in list_config:
+                static_path = list_config['static_file']
+                print(f"  Reading from static file: {static_path}")
+                try:
+                    with open(static_path, 'r') as f:
+                        for line in f:
+                            line = line.strip()
+                            # Skip comments and empty lines
+                            if not line or line.startswith('#'):
+                                continue
+                            try_add_ip_or_range(line, ipv4_networks, ipv6_networks)
+                except FileNotFoundError:
+                    print(f"  WARNING: Static file not found: {static_path}")
+                    continue
             else:
-                headers = {
-                    'accept': 'text/html,application/xhtml+xml,application/xml;'
-                              'q=0.9,image/avif,image/webp,image/apng,*/*;'
-                              'q=0.8,application/signed-exchange;v=b3;q=0.9',
-                    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
-                                  '(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-                }
-            if 'paypal.com' in list_config['url']:
-                headers['cookie'] = 'enforce_policy=ccpa; LANG=en_US%3BUS; tsrce=smarthelpnodeweb'
+                # Choose headers based on config
+                if list_config.get('simple_headers'):
+                    headers = {
+                        'user-agent': 'Mozilla/5.0 (compatible; trusted-lists/1.0)',
+                    }
+                else:
+                    headers = {
+                        'accept': 'text/html,application/xhtml+xml,application/xml;'
+                                  'q=0.9,image/avif,image/webp,image/apng,*/*;'
+                                  'q=0.8,application/signed-exchange;v=b3;q=0.9',
+                        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
+                                      '(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+                    }
+                if 'paypal.com' in list_config['url']:
+                    headers['cookie'] = 'enforce_policy=ccpa; LANG=en_US%3BUS; tsrce=smarthelpnodeweb'
 
-            list_content_r = requests.get(list_config['url'], headers=headers)
-            content_type = list_content_r.headers['content-type'].split(';').pop(0).strip()
+                list_content_r = requests.get(list_config['url'], headers=headers)
+                content_type = list_content_r.headers['content-type'].split(';').pop(0).strip()
 
-            # Regex extraction
-            if 'regex' in list_config:
-                if 'html_selector' in list_config:
-                    soup = BeautifulSoup(list_content_r.text, 'html.parser')
-                    html_elems = soup.select(list_config['html_selector'])
-                    for elem in html_elems:
-                        extract_with_regex(elem.get_text(), list_config['regex'],
+                # Regex extraction
+                if 'regex' in list_config:
+                    if 'html_selector' in list_config:
+                        soup = BeautifulSoup(list_content_r.text, 'html.parser')
+                        html_elems = soup.select(list_config['html_selector'])
+                        for elem in html_elems:
+                            extract_with_regex(elem.get_text(), list_config['regex'],
+                                               ipv4_networks, ipv6_networks)
+                    else:
+                        extract_with_regex(list_content_r.text, list_config['regex'],
                                            ipv4_networks, ipv6_networks)
-                else:
-                    extract_with_regex(list_content_r.text, list_config['regex'],
-                                       ipv4_networks, ipv6_networks)
-                print(f"Extracted {len(ipv4_networks)} IPv4 + {len(ipv6_networks)} IPv6 via regex")
+                    print(f"Extracted {len(ipv4_networks)} IPv4 + {len(ipv6_networks)} IPv6 via regex")
 
-            elif content_type == 'text/plain':
-                list_items = list_content_r.text.splitlines()
-                for item in list_items:
-                    try_add_ip_or_range(item, ipv4_networks, ipv6_networks)
+                elif content_type == 'text/plain':
+                    list_items = list_content_r.text.splitlines()
+                    for item in list_items:
+                        try_add_ip_or_range(item, ipv4_networks, ipv6_networks)
 
-            elif content_type == 'application/json':
-                data = list_content_r.json()
-                json_selectors = []
-                if 'json_selector' in list_config:
-                    if not isinstance(list_config['json_selector'], list):
-                        json_selectors.append(list_config['json_selector'])
+                elif content_type == 'application/json':
+                    data = list_content_r.json()
+                    json_selectors = []
+                    if 'json_selector' in list_config:
+                        if not isinstance(list_config['json_selector'], list):
+                            json_selectors.append(list_config['json_selector'])
+                        else:
+                            json_selectors = list_config['json_selector']
+
+                    for json_selector in json_selectors:
+                        json_parent_tree = json_selector.split('.')
+                        target_element = data.copy()
+                        for elem in json_parent_tree:
+                            target_element = target_element[elem]
+
+                        if 'json_value_keys' in list_config:
+                            extract_json_value_keys(
+                                target_element,
+                                list_config['json_value_keys'],
+                                ipv4_networks, ipv6_networks
+                            )
+                        elif 'html_selector' in list_config:
+                            soup = BeautifulSoup(target_element, 'html.parser')
+                            list_items = soup.select(list_config['html_selector'])
+                            for item in list_items:
+                                try_add_ip_or_range(item.text, ipv4_networks, ipv6_networks)
+                        else:
+                            for item in target_element:
+                                try_add_ip_or_range(item, ipv4_networks, ipv6_networks)
+
+                elif content_type == 'text/html':
+                    soup = BeautifulSoup(list_content_r.text, 'html.parser')
+                    list_items = []
+                    if 'html_selector' in list_config:
+                        html_elems = soup.select(list_config['html_selector'])
+                        for elem in html_elems:
+                            list_items.append(elem.text)
                     else:
-                        json_selectors = list_config['json_selector']
-
-                for json_selector in json_selectors:
-                    json_parent_tree = json_selector.split('.')
-                    target_element = data.copy()
-                    for elem in json_parent_tree:
-                        target_element = target_element[elem]
-
-                    if 'json_value_keys' in list_config:
-                        extract_json_value_keys(
-                            target_element,
-                            list_config['json_value_keys'],
-                            ipv4_networks, ipv6_networks
-                        )
-                    elif 'html_selector' in list_config:
-                        soup = BeautifulSoup(target_element, 'html.parser')
-                        list_items = soup.select(list_config['html_selector'])
-                        for item in list_items:
-                            try_add_ip_or_range(item.text, ipv4_networks, ipv6_networks)
-                    else:
-                        for item in target_element:
-                            try_add_ip_or_range(item, ipv4_networks, ipv6_networks)
-
-            elif content_type == 'text/html':
-                soup = BeautifulSoup(list_content_r.text, 'html.parser')
-                list_items = []
-                if 'html_selector' in list_config:
-                    html_elems = soup.select(list_config['html_selector'])
-                    for elem in html_elems:
-                        list_items.append(elem.text)
-                else:
-                    list_items = soup.text.splitlines()
-                for item in list_items:
-                    try_add_ip_or_range(item, ipv4_networks, ipv6_networks)
+                        list_items = soup.text.splitlines()
+                    for item in list_items:
+                        try_add_ip_or_range(item, ipv4_networks, ipv6_networks)
 
             # Get description
             description = list_config.get('description',
