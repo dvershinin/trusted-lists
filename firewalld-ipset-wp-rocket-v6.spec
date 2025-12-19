@@ -1,19 +1,19 @@
-%global ipset_name wp-rocket
+%global ipset_name wp-rocket-v6
 
 Name:           firewalld-ipset-%{ipset_name}
-Version:        20251215
+Version:        20251219
 Release:        1%{?dist}
-Summary:        WP Rocket cache preloading service IP addresses
+Summary:        WP Rocket cache preloading service IPv6 addresses
 License:        BSD
 Requires:       firewalld
 BuildArch:      noarch
-URL:            https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv4.txt
+URL:            https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv6.txt
 Source0:        %{ipset_name}.xml
 BuildRequires:  python3
 
 
 %description
-WP Rocket cache preloading service IP addresses
+WP Rocket cache preloading service IPv6 addresses
 
 %prep
 # nothing to do
@@ -39,3 +39,4 @@ test -f /usr/bin/firewall-cmd && firewall-cmd --reload --quiet || :
 
 %changelog
 # no changelog
+
