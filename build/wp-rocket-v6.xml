@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ipset type="hash:net">
+  <option name="family" value="inet6"/>
+  <description>WP Rocket cache preloading service IPv6 addresses</description>
+  <entry>2400:cb00::/32</entry>
+  <entry>2405:8100::/32</entry>
+  <entry>2405:b500::/32</entry>
+  <entry>2606:4700::/32</entry>
+  <entry>2803:f800::/32</entry>
+  <entry>2a02:2350:4:200::/55</entry>
+  <entry>2a06:98c0::/29</entry>
+  <entry>2c0f:f248::/32</entry>
+</ipset>

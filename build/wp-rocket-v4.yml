@@ -1,4 +1,4 @@
-description: WP Rocket cache preloading service IP addresses
+description: WP Rocket cache preloading service IPv4 addresses
 family: inet
 items:
 - 5.249.224.0/24
@@ -22,5 +22,5 @@ items:
 - 190.93.240.0/20
 - 197.234.240.0/22
 - 198.41.128.0/17
-name: wp-rocket
+name: wp-rocket-v4
 url: https://mega.wp-rocket.me/rocket-ips/rocket-ips-plain-ipv4.txt

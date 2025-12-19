@@ -44,3 +44,8 @@ def test_cloudflare_style_range():
     net = IPv4Network("103.21.244.0/22")
     assert net.num_addresses == 1024
 
+
+
+
+
+

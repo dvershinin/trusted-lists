@@ -44,3 +44,8 @@ def test_description_is_optional_string(trusted_config):
             assert isinstance(config["description"], str), \
                 f"{name} description must be a string"
 
+
+
+
+
+
